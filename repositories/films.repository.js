@@ -84,7 +84,7 @@ const updateById = async (id, film) => {
                 throw new Error("Problème lors de l'insertion des genres du film");
             }
         } else {
-            throw new Error("Le nouveau film n'a pas pu être posté en base");
+            throw new Error("Le film n'a pas pu être mis à jour");
         }
     } catch (error) {
         throw new Error(error);
@@ -94,7 +94,7 @@ const updateById = async (id, film) => {
 const deleteById = async (id) => {
     const DELETE = `DELETE FROM Films WHERE id=?`;
     try {
-        const deleted = await connection.query(DELETE, id);
+        const deleted = await connection.query(DELETE, [id]);
         if (deleted[0].affectedRows > 0) {
             const deletedFilmGenres = await Film_Genre_Repository.removeByFilmId(id);
             if (deletedFilmGenres[0].affectedRows > 0) {

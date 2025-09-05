@@ -29,10 +29,24 @@ const addMultiple = async (userId, filmIds) => {
     }
 }
 
+const removeByFilmAndUserId = async (userId, filmId) => {
+    const DELETE = `DELETE FROM Favoris WHERE userId=? AND filmId=?`;
+    try {
+        const deleted = await connection.query(DELETE, [userId, filmId]);
+        if (deleted[0].affectedRows > 0) {
+            return deleted[0].affectedRows;
+        } else {
+            throw new Error("La suppression n'a pas pu être effectué");
+        }
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
 const removeByUserId = async (id) => {
     const DELETE = `DELETE FROM Favoris WHERE userId=?`;
     try {
-        const deleted = await connection.query(DELETE, id);
+        const deleted = await connection.query(DELETE, [id]);
         if (deleted[0].affectedRows > 0) {
             return deleted[0].affectedRows;
         } else {
@@ -46,7 +60,7 @@ const removeByUserId = async (id) => {
 const removeByFilmId = async (id) => {
     const DELETE = `DELETE FROM Favoris WHERE filmId=?`;
     try {
-        const deleted = await connection.query(DELETE, id);
+        const deleted = await connection.query(DELETE, [id]);
         if (deleted[0].affectedRows > 0) {
             return deleted[0].affectedRows;
         } else {
@@ -57,4 +71,4 @@ const removeByFilmId = async (id) => {
     }
 }
 
-export default { add, addMultiple, removeByUserId, removeByFilmId }
+export default { add, addMultiple, removeByUserId, removeByFilmId, removeByFilmAndUserId }
