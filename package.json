@@ -1,0 +1,28 @@
+{
+  "dependencies": {
+    "dotenv": "^17.2.2",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "mysql2": "^3.14.4",
+    "yup": "^1.7.0"
+  },
+  "name": "xpressmovies",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NeoFlake/XpressMovies.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/NeoFlake/XpressMovies/issues"
+  },
+  "homepage": "https://github.com/NeoFlake/XpressMovies#readme"
+}
