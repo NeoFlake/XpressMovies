@@ -1,5 +1,5 @@
 import connection from "../config/db.config.js";
-import Film_Genre_Repository from "./film_genre.repositories.js";
+import Film_Genre_Repository from "./film_genre.repository.js";
 
 const findAll = async () => {
     const SELECT = "SELECT f.id, f.title, f.poster, f.releaseDate," +

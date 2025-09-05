@@ -29,10 +29,10 @@ const addMultiple = async (filmId, genreIds) => {
     }
 }
 
-const removeByFilmId = async (idFilm) => {
+const removeByFilmId = async (id) => {
     const DELETE = `DELETE FROM Film_Genre WHERE filmId=?`;
     try {
-        const deleted = await connection.query(DELETE, idFilm);
+        const deleted = await connection.query(DELETE, id);
         if (deleted[0].affectedRows > 0) {
             return deleted[0].affectedRows;
         } else {
@@ -43,10 +43,10 @@ const removeByFilmId = async (idFilm) => {
     }
 }
 
-const removeByGenreId = async (idGenre) => {
+const removeByGenreId = async (id) => {
     const DELETE = `DELETE FROM Film_Genre WHERE filmId=?`;
     try {
-        const deleted = await connection.query(DELETE, idGenre);
+        const deleted = await connection.query(DELETE, id);
         if (deleted[0].affectedRows > 0) {
             return deleted[0].affectedRows;
         } else {
