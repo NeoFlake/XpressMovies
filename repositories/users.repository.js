@@ -2,25 +2,25 @@ import connection from "../config/db.config.js";
 import Favoris_Repository from "./favoris.repository.js";
 
 const findAll = async () => {
-    const SELECT = "SELECT u.id, u.lastname, u.firstname, u.email, u.password, " +
-        "COALESCE( " +
-        "JSON_ARRAYAGG( " +
-        "JSON_OBJECT( " +
-        "'id', f.id," +
-        "'title', f.title," +
-        "'poster', f.poster," +
-        "'releaseDate', f.releaseDate," +
-        "'addedDate', f.addedDate," +
-        "'genres', COALESCE(" +
-        "JSON_ARRAYAGG(DISTINCT g.nom), JSON_ARRAY()" +
-        "))), JSON_ARRAY()" +
-        ") AS favoris, " +
-        "u.role FROM Users AS u" +
-        "LEFT JOIN Favorites fav ON fav.user_id = u.id " +
-        "LEFT JOIN Films f ON f.id = fav.film_id " +
-        "LEFT JOIN Film_Genre fg ON fg.film_id = f.id " +
-        "LEFT JOIN Genres g ON g.id = fg.genre_id " +
-        "GROUP BY u.id, f.id";
+    const SELECT = `SELECT u.id, u.lastname, u.firstname, u.email, u.password,  +
+        COALESCE(  +
+        JSON_ARRAYAGG(  +
+        JSON_OBJECT(  +
+        'id', f.id, +
+        'title', f.title, +
+        'poster', f.poster, +
+        'releaseDate', f.releaseDate, +
+        'addedDate', f.addedDate, +
+        'genres', COALESCE( +
+        JSON_ARRAYAGG(DISTINCT g.nom), JSON_ARRAY() +
+        ))), JSON_ARRAY() +
+        ) AS favoris,  +
+        u.role FROM Users AS u +
+        LEFT JOIN Favorites fav ON fav.user_id = u.id  +
+        LEFT JOIN Films f ON f.id = fav.film_id  +
+        LEFT JOIN Film_Genre fg ON fg.film_id = f.id "+
+        LEFT JOIN Genres g ON g.id = fg.genre_id  +
+        GROUP BY u.id, f.id`;
     try {
         const resultat = await connection.query(SELECT);
         if (resultat[0].length > 0) {
@@ -34,26 +34,26 @@ const findAll = async () => {
 }
 
 const findById = async (id) => {
-    const SELECT = "SELECT u.id, u.lastname, u.firstname, u.email, u.password, " +
-        "COALESCE( " +
-        "JSON_ARRAYAGG( " +
-        "JSON_OBJECT( " +
-        "'id', f.id," +
-        "'title', f.title," +
-        "'poster', f.poster," +
-        "'releaseDate', f.releaseDate," +
-        "'addedDate', f.addedDate," +
-        "'genres', COALESCE(" +
-        "JSON_ARRAYAGG(DISTINCT g.nom), JSON_ARRAY()" +
-        "))), JSON_ARRAY()" +
-        ") AS favoris, " +
-        "u.role FROM Users AS u" +
-        "LEFT JOIN Favorites fav ON fav.user_id = u.id " +
-        "LEFT JOIN Films f ON f.id = fav.film_id " +
-        "LEFT JOIN Film_Genre fg ON fg.film_id = f.id " +
-        "LEFT JOIN Genres g ON g.id = fg.genre_id " +
-        "WHERE u.id = ? " +
-        "GROUP BY u.id, f.id";
+    const SELECT = `SELECT u.id, u.lastname, u.firstname, u.email, u.password,  +
+        COALESCE(  +
+        JSON_ARRAYAGG(  +
+        JSON_OBJECT(  +
+        'id', f.id, +
+        'title', f.title, +
+        'poster', f.poster, +
+        'releaseDate', f.releaseDate, +
+        'addedDate', f.addedDate, +
+        'genres', COALESCE( +
+        JSON_ARRAYAGG(DISTINCT g.nom), JSON_ARRAY() +
+        ))), JSON_ARRAY() +
+        ) AS favoris,  +
+        u.role FROM Users AS u +
+        LEFT JOIN Favorites fav ON fav.user_id = u.id  +
+        LEFT JOIN Films f ON f.id = fav.film_id  +
+        LEFT JOIN Film_Genre fg ON fg.film_id = f.id  +
+        LEFT JOIN Genres g ON g.id = fg.genre_id  +
+        WHERE u.id = ?  +
+        GROUP BY u.id, f.id`;
     try {
         const resultat = await connection.query(SELECT, [id]);
         if (resultat[0].length > 0) {

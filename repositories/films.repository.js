@@ -2,12 +2,12 @@ import connection from "../config/db.config.js";
 import Film_Genre_Repository from "./film_genre.repository.js";
 
 const findAll = async () => {
-    const SELECT = "SELECT f.id, f.title, f.poster, f.releaseDate," +
-        "f.addedDate, f.adminId, COALESCE(JSON_ARRAYAGG(g.nom), JSON_ARRAY()) AS genres FROM Films AS f " +
-        "LEFT JOIN Film_Genre fg ON f.id = fg.film_id " +
-        "LEFT JOIN Genres g ON g.id = fg.genre_id " +
-        "JOIN Users u ON f.adminId = u.id" +
-        "GROUP BY f.id";
+    const SELECT = `SELECT f.id, f.title, f.poster, f.releaseDate, +
+        f.addedDate, f.adminId, COALESCE(JSON_ARRAYAGG(g.nom), JSON_ARRAY()) AS genres FROM Films AS f  +
+        LEFT JOIN Film_Genre fg ON f.id = fg.film_id  +
+        LEFT JOIN Genres g ON g.id = fg.genre_id  +
+        JOIN Users u ON f.adminId = u.id +
+        GROUP BY f.id`;
     try {
         const resultat = await connection.query(SELECT);
         if (resultat[0].length > 0) {
@@ -21,13 +21,13 @@ const findAll = async () => {
 }
 
 const findById = async (id) => {
-    const SELECT = "SELECT f.id, f.title, f.poster, f.releaseDate," +
-        "f.addedDate, u.name AS admin, COALESCE(JSON_ARRAYAGG(g.nom), JSON_ARRAY()) AS genres FROM Films AS f " +
-        "LEFT JOIN Film_Genre fg ON f.id = fg.film_id " +
-        "LEFT JOIN Genres g ON g.id = fg.genre_id " +
-        "JOIN Users u ON f.adminId = u.id " +
-        "WHERE f.id=? " +
-        "GROUP BY f.id";
+    const SELECT = `SELECT f.id, f.title, f.poster, f.releaseDate, +
+        f.addedDate, u.name AS admin, COALESCE(JSON_ARRAYAGG(g.nom), JSON_ARRAY()) AS genres FROM Films AS f  +
+        LEFT JOIN Film_Genre fg ON f.id = fg.film_id  +
+        LEFT JOIN Genres g ON g.id = fg.genre_id  +
+        JOIN Users u ON f.adminId = u.id  +
+        WHERE f.id=?  +
+        GROUP BY f.id`;
     try {
         const resultat = await connection.query(SELECT, [id]);
         if (resultat[0].length > 0) {
