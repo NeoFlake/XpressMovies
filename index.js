@@ -2,6 +2,7 @@ import express from 'express';
 import 'dotenv/config';
 import session from "express-session";
 import authentification from "./routes/authentification.route.js";
+import homepage from "./routes/homepage.route.js";
 
 const app = express();
 
@@ -9,7 +10,8 @@ const app = express();
 app.use(session({
     secret: "express-ejs", 
     resave: false,
-    saveUnitialized: false 
+    saveUninitialized: false,
+    cookie: {maxAge: 1000 * 60 * 60 * 24}
 }));
 
 // Utiliser le middleware body-parser
@@ -20,6 +22,7 @@ const PORT = process.env.PORT || 5555;
 // Mapping entre routes et le routeur
 
 app.use("/authentification", authentification);
+app.use("/homepage", homepage);
 
 // Configuration du moteur de template
 app.set("view engine", "ejs");

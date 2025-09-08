@@ -33,6 +33,27 @@ const findAll = async () => {
     }
 }
 
+const findByEmail = async (email) => {
+    const SELECT = `SELECT * FROM Users WHERE email=?`;
+    try {
+        const resultat = await connection.query(SELECT, [email]);
+        if (resultat[0].length > 0) {
+            return {
+                id: resultat[0][0].id,
+                lastname: resultat[0][0].lastname,
+                firstname: resultat[0][0].firstname,
+                email: resultat[0][0].email,
+                password: resultat[0][0].password,
+                role: resultat[0][0].role
+            };
+        } else {
+            return 0;
+        }
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
 const findById = async (id) => {
     const SELECT = `SELECT u.id, u.lastname, u.firstname, u.email, u.password,  +
         COALESCE(  +
@@ -139,4 +160,4 @@ const deleteById = async (id) => {
     }
 }
 
-export default { findAll, findById, add, updateById, updateFavorisByUserId, deleteById }
+export default { findAll, findById, findByEmail, add, updateById, updateFavorisByUserId, deleteById }

@@ -61,12 +61,14 @@
       </div>
     </div>
     <% if(errors !== []){ %>
-    <ul class="list-group">
-      <% errors.forEach(error => { %>
-        <li class="list-group-item"><%= error %></li>
-      <% }); %>
-      <% } %>
-    </ul>
+    <div class="row mt-3 d-flex justify-content-center ms-4">
+      <ul class="list-group list-group-flush col-5">
+        <% errors.forEach(error => { %>
+        <li class="list-group-item border-0"><%= error %></li>
+        <% }); %>
+        <% } %>
+      </ul>
+    </div>
   </div>
 </body>
 
