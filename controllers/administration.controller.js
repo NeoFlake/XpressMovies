@@ -179,7 +179,6 @@ const addFilm = async (req, res) => {
                 description: req.body.description,
                 adminId: 4
             }
-            console.log(filmToAdd);
             const add = await FilmsRepository.add(filmToAdd);
             if (add) {
                 res.redirect("/administration");
@@ -188,7 +187,6 @@ const addFilm = async (req, res) => {
             }
         }
     } catch (error) {
-        console.log(error.message);
         req.flash("filmError", error.message);
         res.redirect("/administration");
     }
