@@ -16,11 +16,12 @@ const add = async (filmGenre) => {
 
 const addMultiple = async (filmId, genreIds) => {
     const values = genreIds.map(genreId => [genreId, filmId]);
+    
     const INSERT = "INSERT INTO Film_Genre (genreId, filmId) VALUES ?";
     try {
-        const resultat = await connection.query(INSERT, [values]);
-        if(resultat.affectedRows > 0){
-            return resultat.affectedRows;
+        const [resultat] = await connection.query(INSERT, [values]);
+        if([resultat][0].affectedRows > 0){
+            return true;
         } else {
             throw new Error("Les nouveaux genres n'ont pas étés postés en base");
         }

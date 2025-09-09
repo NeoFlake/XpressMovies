@@ -15,7 +15,7 @@ const findAll = async () => {
 }
 
 const findById = async (id) => {
-    const SELECT = "SELECT * FROM Genres WHERE id=?";
+    const SELECT = "SELECT * FROM Genres WHERE id=?"; 
     try {
         const resultat = await connection.query(SELECT, [id]);
         if (resultat[0].length > 0) {
@@ -29,6 +29,20 @@ const findById = async (id) => {
     } catch (error) {
         throw new Error(error);
     }
+}
+
+const nameAlreadyKnown = async (name) => {
+    const SELECT = "SELECT * FROM Genres WHERE name=?";
+    let result = false;
+    try {
+        const resultat = await connection.query(SELECT, [name]);
+        if (resultat[0].length > 0) {
+            result = true;
+        } 
+    } catch (error) {
+        throw new Error(error);
+    }
+    return result;
 }
 
 const add = async (name) => {
@@ -50,7 +64,7 @@ const updateById = async (id, genre) => {
     try {
         const update = await connection.query(UPDATE, [genre.name, id]);
         if(update[0].affectedRows > 0){
-            return update[0].affectedRows;
+            return true;
         } else {
             throw new Error("Le genre n'a pas été modifié en base");
         }
@@ -62,9 +76,9 @@ const updateById = async (id, genre) => {
 const deleteById = async (id) => {
     const DELETE = `DELETE FROM Genres WHERE id=?`;
     try {
-        const deleted = await connection.query(DELETE, idPersonne);
+        const deleted = await connection.query(DELETE, id);
         if (deleted[0].affectedRows > 0) {
-            return deleted[0].affectedRows;
+            return true;
         } else {
             throw new Error("La suppression du genre n'a pas pu être effectué");
         }
@@ -73,4 +87,4 @@ const deleteById = async (id) => {
     }
 }
 
-export default { findAll, findById, add, updateById, deleteById }
+export default { findAll, findById, nameAlreadyKnown, add, updateById, deleteById }

@@ -3,6 +3,8 @@ import 'dotenv/config';
 import session from "express-session";
 import authentification from "./routes/authentification.route.js";
 import homepage from "./routes/homepage.route.js";
+import administration from "./routes/administration.route.js";
+import flash from "connect-flash";
 
 const app = express();
 
@@ -10,12 +12,16 @@ const app = express();
 app.use(session({
     secret: "express-ejs", 
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
     cookie: {maxAge: 1000 * 60 * 60 * 24}
 }));
 
 // Utiliser le middleware body-parser
 app.use(express.urlencoded({extended: true}));
+
+app.use(flash());
+
+app.use(express.static("public"));
 
 const PORT = process.env.PORT || 5555;
 
@@ -23,6 +29,7 @@ const PORT = process.env.PORT || 5555;
 
 app.use("/authentification", authentification);
 app.use("/homepage", homepage);
+app.use("/administration", administration);
 
 // Configuration du moteur de template
 app.set("view engine", "ejs");

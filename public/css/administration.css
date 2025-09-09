@@ -1,0 +1,11 @@
+.list-group-item span {
+    cursor: default !important;
+}
+
+.list-group-item:hover .action {
+  display: block !important;
+}
+
+.list-group-item:hover .unactivated {
+    display: none;
+}
