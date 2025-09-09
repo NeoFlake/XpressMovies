@@ -14,9 +14,9 @@ const modifyGenreSchema = yup.object().shape({
 });
 
 const genreSchema = yup.object().shape({
-    nameM: yup
+    name: yup
         .string("Genre invalide")
-        .required("L'intitulé de genre est obligatoire pour la validation")
+        .required("L'intitulé du genre est obligatoire pour la validation")
         .matches(/^[A-Za-zÀ-ÖØ-öø-ÿ ]{3,64}$/, "Cet intitulé de genre n'est pas disponible")
 });
 
@@ -35,7 +35,7 @@ const filmSchema = yup.object().shape({
     poster: yup
         .string("Lien poster invalide")
         .required("L'affiche du film est obligatoire pour la validation")
-        .matches(/^(https?:\/\/[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:[\/\w\-._~:%+?#=]*)\.(?:jpg|jpeg|png|gif|webp|svg))$/i, "l'adresse de l'affiche n'est pas valide"),
+        .matches(/^(https?:\/\/[^\s]+?\.(?:jpg|jpeg|png|gif|webp|svg))(?:\?.*)?$/i, "l'adresse de l'affiche n'est pas valide"),
 
     releaseDate: yup
         .date("Le format doit être au format date")
@@ -51,9 +51,10 @@ const displayAdminPage = async (req, res) => {
         const genres = await GenresRepository.findAll();
         let films = await FilmsRepository.findAll();
 
-        if (films.length > 0) {   
+        if (films.length > 0) {
             films = formatterDateFilm(films);
         }
+
 
         let genreToModify = null;
 
@@ -74,7 +75,7 @@ const displayAdminPage = async (req, res) => {
                 films: {
                     list: films
                 },
-                error: { genreError: req.flash("genreError") }
+                error: { genreError: req.flash("genreError"), filmError: req.flash("filmError") }
             });
         } else {
             res.render("administration", {
@@ -86,7 +87,7 @@ const displayAdminPage = async (req, res) => {
                 films: {
                     list: films
                 },
-                error: { genreError: req.flash("genreError") }
+                error: { genreError: req.flash("genreError"), filmError: req.flash("filmError") }
             });
         }
     } catch (error) {
@@ -177,7 +178,7 @@ const addFilm = async (req, res) => {
                 poster: req.body.poster,
                 releaseDate: req.body.releaseDate,
                 description: req.body.description,
-                adminId: 4
+                adminId: 1
             }
             const add = await FilmsRepository.add(filmToAdd);
             if (add) {
@@ -192,14 +193,29 @@ const addFilm = async (req, res) => {
     }
 }
 
+const supprimerFilm = async (req, res) => {
+    try {
+        
+        const deleted = await FilmsRepository.deleteById(req.params.id);
+        if (deleted) {
+            res.redirect("/administration");
+        } else {
+            throw new Error("Le film que vous avez souhaité supprimé n'a pas pu être supprimé");
+        }
+    } catch (error) {
+        req.flash("filmError", error.message);
+        res.redirect("/administration");
+    }
+}
+
 const formatterDateFilm = (films) => {
     let results = films;
-    
+
     results.forEach(film => {
         film.releaseDate = dayjs(film.releaseDate).format("dddd D MMMM YYYY");
     });
-    
+
     return results;
 }
 
-export default { displayAdminPage, addGenre, displayModifierGenreForm, modifierGenre, supprimerGenre, addFilm };
+export default { displayAdminPage, addGenre, displayModifierGenreForm, modifierGenre, supprimerGenre, addFilm, supprimerFilm };

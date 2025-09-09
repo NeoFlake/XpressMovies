@@ -5,9 +5,8 @@ const findAll = async () => {
     const SELECT = `SELECT f.id, f.title, f.poster, f.releaseDate, f.description,
         f.addedDate, f.adminId, COALESCE(JSON_ARRAYAGG(g.name), JSON_ARRAY()) AS genres FROM Films AS f  
         LEFT JOIN Film_Genre fg ON f.id = fg.filmId  
-        LEFT JOIN Genres g ON g.id = fg.genreId  
-        JOIN Users u ON f.adminId = u.id 
-        GROUP BY f.id;`;
+        LEFT JOIN Genres g ON g.id = fg.genreId
+        GROUP BY f.id`;
     try {
         const resultat = await connection.query(SELECT);
         if (resultat[0].length > 0) {
@@ -25,9 +24,9 @@ const existByTitle = async (title) => {
     let result = false;
     try {
         const finded = await connection.query(SELECT, [title]);
-        if(finded[0].length > 0){   
+        if (finded[0].length > 0) {
             result = true;
-        } 
+        }
         return result;
     } catch (error) {
         throw new Error(error);
@@ -65,7 +64,7 @@ const findById = async (id) => {
 const add = async (film) => {
     const INSERT = "INSERT INTO Films (title, poster, releaseDate, description, addedDate, adminId) VALUES (?, ?, ?, ?, NOW(), ?)";
     try {
-        
+
         const resultat = await connection.query(INSERT, [film.title, film.poster, film.releaseDate, film.description, film.adminId]);
         if (resultat[0].affectedRows > 0) {
             const genres = await Film_Genre_Repository.addMultiple(resultat[0].insertId, film.genres);
@@ -120,7 +119,7 @@ const deleteById = async (id) => {
         } else {
             throw new Error("La suppression du film n'a pas pu être effectué");
         }
-    } catch (error) {
+    } catch (error) {   
         throw new Error(error);
     }
 }

@@ -1,6 +1,5 @@
 const requireRole = (role) => {
     return (req, res, next) => {
-        
         if (req.session.userLogged && req.session.userLogged.role === role) {
             next();
         } else {

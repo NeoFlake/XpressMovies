@@ -52,7 +52,7 @@ const inscription = async (req, res) => {
                     email: req.body.emailI,
                     password: passwordHashed
                 };
-                const emailUsed = await UserRepository.findPartialByEmail(user.email);
+                const emailUsed = await UserRepository.findByEmail(user.email);
                 if (emailUsed !== 0) {
                     throw new Error("Veuillez changer d'email");
                 } else {
