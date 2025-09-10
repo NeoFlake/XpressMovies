@@ -80,7 +80,7 @@ const displayAdminPage = async (req, res) => {
         if (films.length > 0) {
             films = formatterDateFilm(films);
         }
-
+        
         const flashIdGenreToModify = req.flash("idGenreToModify");
         const flashDisplayModifyGenreForm = req.flash("displayModifyGenreForm");
         const flashIdFilmToModify = req.flash("idFilmToModify");
@@ -107,8 +107,9 @@ const displayAdminPage = async (req, res) => {
                 error: { genreError: req.flash("genreError"), filmError: req.flash("filmError") }
             });
         } else if (displayModifyFilmForm) {
+            
             const filmToModify = await FilmsRepository.findById(idFilmToModify);
-
+            
             res.render("administration", {
                 genres: {
                     list: genres,
@@ -251,7 +252,7 @@ const supprimerFilm = async (req, res) => {
     }
 }
 
-const displayModifierFilmForm = (req, res) => {
+const displayModifierFilmForm = (req, res) => { 
     req.flash("displayModifierFilmForm", true);
     req.flash("idFilmToModify", req.params.id);
     res.redirect("/administration");
@@ -285,9 +286,7 @@ const modifierFilm = async (req, res) => {
         } else {
             throw new Error("Erreur technique lors de la soumission du formulaire");
         }
-    } catch (error) {
-        console.log(error.message);
-        
+    } catch (error) {   
         req.flash("filmError", error.message);
         res.redirect("/administration");
     }

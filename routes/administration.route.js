@@ -4,7 +4,7 @@ import AuthentificationService from "../services/authentification.service.js";
 
 const router = express.Router();
 
-//router.use(AuthentificationService.requireRole("ADMIN"));
+router.use(AuthentificationService.requireRole("ADMIN"));
 
 router
     .get("/genres/modify/:id", AdministrationController.displayModifierGenreForm)

@@ -57,7 +57,7 @@ const findById = async (id) => {
         } else {
             throw new Error("Aucun film n'a été trouvé avec cet identifiant");
         }
-    } catch (error) {
+    } catch (error) { 
         throw new Error(error);
     }
 }
