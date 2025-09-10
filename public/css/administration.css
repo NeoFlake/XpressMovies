@@ -1,5 +1,5 @@
 .list-group-item span {
-    cursor: default !important;
+  cursor: default !important;
 }
 
 .list-group-item:hover .action {
@@ -7,5 +7,37 @@
 }
 
 .list-group-item:hover .unactivated {
-    display: none;
+  display: none;
+}
+
+.resume-text {
+  --lines: 3;
+  display: -webkit-box !important;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: var(--lines);
+  line-clamp: var(--lines);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  line-height: 1.2em;
+  max-height: calc(1.2em * var(--lines));
+}
+
+.resume-text.full-text {
+  -webkit-line-clamp: unset;
+  line-clamp: unset;
+  max-height: none;
+}
+
+.annul-a-behavior {
+  color: inherit;
+  text-decoration: none;
+}
+
+.annul-a-behavior:hover {
+  color: inherit;
+  opacity: 0.7d;
+}
+.cursor-pointer {
+  cursor: pointer;
 }

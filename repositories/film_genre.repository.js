@@ -26,6 +26,8 @@ const addMultiple = async (filmId, genreIds) => {
             throw new Error("Les nouveaux genres n'ont pas étés postés en base");
         }
     } catch (error) {
+        console.log(error.message);
+        
         throw new Error(error);
     }
 }
@@ -33,7 +35,7 @@ const addMultiple = async (filmId, genreIds) => {
 const removeByFilmId = async (id) => {
     const DELETE = `DELETE FROM Film_Genre WHERE filmId=?`;
     try {
-        const deleted = await connection.query(DELETE, id);
+        const deleted = await connection.query(DELETE, [id]);
         if (deleted[0].affectedRows > 0) {
             return deleted[0].affectedRows;
         } else {

@@ -46,6 +46,32 @@ const filmSchema = yup.object().shape({
         .required("Le pitch du film est obligatoire pour la validation")
 });
 
+const modifyFilmSchema = yup.object().shape({
+    titleM: yup
+        .string("Titre invalide")
+        .required("L'intitulé du film est obligatoire pour la validation")
+        .matches(/^[A-Za-zÀ-ÖØ-öø-ÿ0-9 \-\/_]{3,200}$/, "Cet intitulé de genre n'est pas disponible"),
+
+    genresM: yup
+        .array()
+        .of(yup.number().required())
+        .min(1, "Un genre minimum est obligatoire pour la validation")
+        .required("Un genre minimum est obligatoire pour la validation"),
+
+    posterM: yup
+        .string("Lien poster invalide")
+        .required("L'affiche du film est obligatoire pour la validation")
+        .matches(/^(https?:\/\/[^\s]+?\.(?:jpg|jpeg|png|gif|webp|svg))(?:\?.*)?$/i, "l'adresse de l'affiche n'est pas valide"),
+
+    releaseDateM: yup
+        .date("Le format doit être au format date")
+        .required("La date de sorti du film est obligatoire pour la validation"),
+
+    descriptionM: yup
+        .string("Pitch invalide")
+        .required("Le pitch du film est obligatoire pour la validation")
+});
+
 const displayAdminPage = async (req, res) => {
     try {
         const genres = await GenresRepository.findAll();
@@ -55,17 +81,18 @@ const displayAdminPage = async (req, res) => {
             films = formatterDateFilm(films);
         }
 
-
-        let genreToModify = null;
-
         const flashIdGenreToModify = req.flash("idGenreToModify");
         const flashDisplayModifyGenreForm = req.flash("displayModifyGenreForm");
+        const flashIdFilmToModify = req.flash("idFilmToModify");
+        const flashDisplayModifyFilmForm = req.flash("displayModifierFilmForm");
 
         const idGenreToModify = flashIdGenreToModify.length > 0 ? flashIdGenreToModify[0] : 0;
         const displayModifyGenreForm = flashDisplayModifyGenreForm.length > 0 ? flashDisplayModifyGenreForm[0] : false;
+        const idFilmToModify = flashIdFilmToModify.length > 0 ? flashIdFilmToModify[0] : 0;
+        const displayModifyFilmForm = flashDisplayModifyFilmForm.length > 0 ? flashDisplayModifyFilmForm[0] : false;
 
         if (displayModifyGenreForm) {
-            genreToModify = await GenresRepository.findById(idGenreToModify);
+            const genreToModify = await GenresRepository.findById(idGenreToModify);
             res.render("administration", {
                 genres: {
                     list: genres,
@@ -73,7 +100,25 @@ const displayAdminPage = async (req, res) => {
                     genreToModify: genreToModify
                 },
                 films: {
-                    list: films
+                    list: films,
+                    displayModifyFilmForm: displayModifyFilmForm,
+                    filmToModify: null
+                },
+                error: { genreError: req.flash("genreError"), filmError: req.flash("filmError") }
+            });
+        } else if (displayModifyFilmForm) {
+            const filmToModify = await FilmsRepository.findById(idFilmToModify);
+
+            res.render("administration", {
+                genres: {
+                    list: genres,
+                    displayModifyGenreForm: displayModifyGenreForm,
+                    genreToModify: null
+                },
+                films: {
+                    list: films,
+                    displayModifyFilmForm: displayModifyFilmForm,
+                    filmToModify: filmToModify
                 },
                 error: { genreError: req.flash("genreError"), filmError: req.flash("filmError") }
             });
@@ -82,21 +127,18 @@ const displayAdminPage = async (req, res) => {
                 genres: {
                     list: genres,
                     displayModifyGenreForm: displayModifyGenreForm,
-                    genreToModify: genreToModify
+                    genreToModify: null
                 },
                 films: {
-                    list: films
+                    list: films,
+                    displayModifyFilmForm: displayModifyFilmForm,
+                    filmToModify: null
                 },
                 error: { genreError: req.flash("genreError"), filmError: req.flash("filmError") }
             });
         }
     } catch (error) {
-        let errorMessage = error.message;
-        let genreError = req.flash("genreError");
-        if (genreError.length > 0) {
-            errorMessage = genreError[0];
-        }
-        res.render("administration", { genres: { list: [] }, films: { list: [] }, error: { genreError: errorMessage } });
+        res.render("administration", { genres: { list: [] }, films: { list: [] }, error: { genreError: error.message } });
     }
 }
 
@@ -131,7 +173,8 @@ const modifierGenre = async (req, res) => {
         if (req.params.id === req.body.id) {
             await modifyGenreSchema.validate(req.body);
             const nameKnown = await GenresRepository.nameAlreadyKnown(req.body.nameM);
-            if (nameKnown) {
+            const genreOnBase = await GenresRepository.findById(req.body.id);
+            if (genreOnBase.name !== req.body.nameM && nameKnown) {
                 throw new Error("Cet intitulé de genre de film existe déjà");
             } else {
                 const update = await GenresRepository.updateById(req.params.id, { id: req.body.id, name: req.body.nameM });
@@ -178,7 +221,7 @@ const addFilm = async (req, res) => {
                 poster: req.body.poster,
                 releaseDate: req.body.releaseDate,
                 description: req.body.description,
-                adminId: 1
+                adminId: 1 // TODO: remplaçer par le paramètre de session adéquat!
             }
             const add = await FilmsRepository.add(filmToAdd);
             if (add) {
@@ -195,7 +238,7 @@ const addFilm = async (req, res) => {
 
 const supprimerFilm = async (req, res) => {
     try {
-        
+
         const deleted = await FilmsRepository.deleteById(req.params.id);
         if (deleted) {
             res.redirect("/administration");
@@ -203,6 +246,48 @@ const supprimerFilm = async (req, res) => {
             throw new Error("Le film que vous avez souhaité supprimé n'a pas pu être supprimé");
         }
     } catch (error) {
+        req.flash("filmError", error.message);
+        res.redirect("/administration");
+    }
+}
+
+const displayModifierFilmForm = (req, res) => {
+    req.flash("displayModifierFilmForm", true);
+    req.flash("idFilmToModify", req.params.id);
+    res.redirect("/administration");
+}
+
+const modifierFilm = async (req, res) => {
+    try {   
+        if (req.params.id === req.body.id) {
+            await modifyFilmSchema.validate(req.body);
+            const titleKnown = await FilmsRepository.existByTitle(req.body.titleM);
+            const filmOnBase = await FilmsRepository.findById(req.body.id);
+            if (filmOnBase.title !== req.body.titleM && titleKnown) {
+                throw new Error("Cet intitulé de film existe déjà");
+            } else {
+                const update = await FilmsRepository.updateById(req.params.id, { 
+                    id: req.body.id,
+                    title: req.body.titleM,
+                    poster: req.body.posterM,
+                    releaseDate: req.body.releaseDateM,
+                    description: req.body.descriptionM,
+                    addedDate: filmOnBase.addedDate,
+                    genres: req.body.genresM,
+                    adminId: 1 // TODO: remplaçer par le paramètre de session adéquat!
+                });
+                if (update) {
+                    res.redirect("/administration");
+                } else {
+                    throw new Error("Le film n'a pas pu être mis à jour");
+                }
+            }
+        } else {
+            throw new Error("Erreur technique lors de la soumission du formulaire");
+        }
+    } catch (error) {
+        console.log(error.message);
+        
         req.flash("filmError", error.message);
         res.redirect("/administration");
     }
@@ -218,4 +303,4 @@ const formatterDateFilm = (films) => {
     return results;
 }
 
-export default { displayAdminPage, addGenre, displayModifierGenreForm, modifierGenre, supprimerGenre, addFilm, supprimerFilm };
+export default { displayAdminPage, addGenre, displayModifierGenreForm, modifierGenre, supprimerGenre, addFilm, supprimerFilm, displayModifierFilmForm, modifierFilm };

@@ -12,6 +12,7 @@
     integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
     crossorigin="anonymous"></script>
   <script defer src="https://kit.fontawesome.com/44e9c18f39.js" crossorigin="anonymous"></script>
+  <script defer src="../js/main.js"></script>
 </head>
 
 <body>
@@ -26,60 +27,113 @@
     <% if(films.list.length> 0) { %>
       <div class="row mt-5">
         <% films.list.forEach(film=> { %>
-          <div class="card col-3 ms-3">
+          <div class="card col-3 ms-3 mt-3">
             <img src="<%= film.poster %>" class="card-img-top" alt="une belle affiche">
             <div class="card-body">
               <h5 class="card-title">
                 <%= film.title %>
               </h5>
-              <p class="card-text">Sorti au cinéma le <%= film.releaseDate %>
-              </p>
-              <p class="card-text">
-                <%= film.description %>
-              </p>
-              <div class="d-flex justify-content-end">
-                <button href="#" class="btn btn-primary me-2">Modifier</button>
-                <button onclick="window.location.href='/administration/films/<%= film.id %>'" class="btn btn-danger">Supprimer</button>
-              </div>
+              <% film.genres.forEach(genre=> { %>
+                <span class="badge text-bg-primary mb-2">
+                  <%= genre %>
+                </span>
+                <% }); %>
+                  <p class="card-text">Sorti au cinéma le <%= film.releaseDate %>
+                  </p>
+                  <p id="description-film-<%= film.id %>" class="card-text resume-text mb-3 cursor-pointer">
+                    <%= film.description %>
+                  </p>
+                  <div class="d-flex justify-content-end">
+                    <button onclick="window.location.href='/administration/films/modify/<%= film.id %>'"
+                      class="btn btn-primary me-2">Modifier</button>
+                    <button onclick="window.location.href='/administration/films/<%= film.id %>'"
+                      class="btn btn-danger">Supprimer</button>
+                  </div>
             </div>
           </div>
           <% }) %>
       </div>
       <% } %>
         <div class="row mt-3">
-          <form method="post" action="/administration/films" class="row col-6">
-            <div class="mb-3 col-8">
-              <label for="title" class="form-label">Titre</label>
-              <input type="text" class="form-control" id="title" name="title" />
-            </div>
-            <div class="mb-3 col-8">
-              <label for="genres" class="form-label">Genre(s)</label>
-              <select class="form-select" id="genres" name="genres[]" multiple>
-                <% genres.list.forEach(genre=> { %>
-                  <option value="<%= genre.id %>">
-                    <%= genre.name %>
-                  </option>
-                  <% }) %>
-              </select>
-            </div>
-            <div class="mb-3 col-8">
-              <label for="poster" class="form-label">Affiche</label>
-              <input type="text" class="form-control" id="poster" name="poster" />
-              <div id="posterHelp" class="form-text">Entrez une url finissant par un format d'image valide (jpg,
-                jpeg...)</div>
-            </div>
-            <div class="mb-3 col-8">
-              <label for="releaseDate" class="form-label">Date de sortie au cinéma</label>
-              <input type="date" class="form-control" id="releaseDate" name="releaseDate" />
-            </div>
-            <div class="mb-3 col-8">
-              <label for="description" class="form-label">Pitch du film</label>
-              <textarea type="text" class="form-control" id="description" name="description" rows="3"></textarea>
-            </div>
-            <div>
-              <button type="submit" class="btn btn-primary w-50">Ajouter un film</button>
-            </div>
-          </form>
+          <% if(films.displayModifyFilmForm) { %>
+            <form method="post" action="/administration/films/<%= films.filmToModify.id %>" class="row col-6">
+              <input type="hidden" name="id" value="<%= films.filmToModify.id %>">
+              <div class="mb-3 col-8">
+                <label for="titleM" class="form-label">Titre</label>
+                <input type="text" class="form-control" id="titleM" name="titleM"
+                  value="<%= films.filmToModify.title %>" />
+              </div>
+              <div class="mb-3 col-8">
+                <label for="genresM" class="form-label">Genre(s)</label>
+                <select class="form-select" id="genresM" name="genresM[]" multiple>
+                  <% genres.list.forEach(genre=> { %>
+                    <option value="<%= genre.id %>" <%=films.filmToModify.genres.includes(genre.name) ? 'selected' : ''
+                      %>>
+                      <%= genre.name %>
+                    </option>
+                    <% }) %>
+                </select>
+              </div>
+              <div class="mb-3 col-8">
+                <label for="posterM" class="form-label">Affiche</label>
+                <input type="text" class="form-control" id="posterM" name="posterM"
+                  value="<%= films.filmToModify.poster %>" />
+                <div id="posterHelp" class="form-text">Entrez une url finissant par un format d'image valide (jpg,
+                  jpeg...)</div>
+              </div>
+              <div class="mb-3 col-8">
+                <label for="releaseDateM" class="form-label">Date de sortie au cinéma</label>
+                <input type="date" class="form-control" id="releaseDateM" name="releaseDateM"
+                  value="<%= films.filmToModify.releaseDate %>" />
+              </div>
+              <div class="mb-3 col-8">
+                <label for="descriptionM" class="form-label">Pitch du film</label>
+                <textarea type="text" class="form-control" id="descriptionM" name="descriptionM" rows="3">
+                  <%= films.filmToModify.description %>
+                </textarea>
+              </div>
+              <div class="col-12 row ">
+                <button type="submit" class="btn btn-primary col-5 ms-3"
+                  onclick="window.location.href='/administration/films/:id'">Modifier le film</button>
+                <button class="btn btn-danger col-5 ms-3"
+                  onclick="window.location.href='/administration'">Annuler</button>
+              </div>
+            </form>
+            <% } else { %>
+              <form method="post" action="/administration/films" class="row col-6">
+                <div class="mb-3 col-8">
+                  <label for="title" class="form-label">Titre</label>
+                  <input type="text" class="form-control" id="title" name="title" />
+                </div>
+                <div class="mb-3 col-8">
+                  <label for="genres" class="form-label">Genre(s)</label>
+                  <select class="form-select" id="genres" name="genres[]" multiple>
+                    <% genres.list.forEach(genre=> { %>
+                      <option value="<%= genre.id %>">
+                        <%= genre.name %>
+                      </option>
+                      <% }) %>
+                  </select>
+                </div>
+                <div class="mb-3 col-8">
+                  <label for="poster" class="form-label">Affiche</label>
+                  <input type="text" class="form-control" id="poster" name="poster" />
+                  <div id="posterHelp" class="form-text">Entrez une url finissant par un format d'image valide (jpg,
+                    jpeg...)</div>
+                </div>
+                <div class="mb-3 col-8">
+                  <label for="releaseDate" class="form-label">Date de sortie au cinéma</label>
+                  <input type="date" class="form-control" id="releaseDate" name="releaseDate" />
+                </div>
+                <div class="mb-3 col-8">
+                  <label for="description" class="form-label">Pitch du film</label>
+                  <textarea type="text" class="form-control" id="description" name="description" rows="3"></textarea>
+                </div>
+                <div>
+                  <button type="submit" class="btn btn-primary w-50">Ajouter un film</button>
+                </div>
+              </form>
+              <% } %>
         </div>
         <% if(error.filmError) { %>
           <div class="row mt-3">
@@ -124,7 +178,7 @@
                   </div>
                   <div class="col-12 row ">
                     <button type="submit" class="btn btn-primary col-5 ms-3"
-                      onclick="window.location.href='/administration/genre/:id'">Modifier le genre</button>
+                      onclick="window.location.href='/administration/genres/:id'">Modifier le genre</button>
                     <button class="btn btn-danger col-5 ms-3"
                       onclick="window.location.href='/administration'">Annuler</button>
                   </div>

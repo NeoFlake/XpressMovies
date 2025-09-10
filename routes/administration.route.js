@@ -8,11 +8,13 @@ const router = express.Router();
 
 router
     .get("/genres/modify/:id", AdministrationController.displayModifierGenreForm)
+    .get("/films/modify/:id", AdministrationController.displayModifierFilmForm)
     .get("/", AdministrationController.displayAdminPage)
     .get("/genres/:id", AdministrationController.supprimerGenre)
     .get("/films/:id", AdministrationController.supprimerFilm)
     .post("/genres/:id", AdministrationController.modifierGenre)
     .post("/genres", AdministrationController.addGenre)
-    .post("/films", AdministrationController.addFilm);
+    .post("/films", AdministrationController.addFilm)
+    .post("/films/:id", AdministrationController.modifierFilm);
 
 export default router;

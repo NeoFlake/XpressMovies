@@ -34,10 +34,10 @@ const existByTitle = async (title) => {
 }
 
 const findById = async (id) => {
-    const SELECT = `SELECT f.id, f.title, f.poster, f.releaseDate, f.description
-        f.addedDate, u.name AS admin, COALESCE(JSON_ARRAYAGG(g.nom), JSON_ARRAY()) AS genres FROM Films AS f  
-        LEFT JOIN Film_Genre fg ON f.id = fg.film_id  
-        LEFT JOIN Genres g ON g.id = fg.genre_id  
+    const SELECT = `SELECT f.id, f.title, f.poster, f.releaseDate, f.description,
+        f.addedDate, u.lastname AS admin, COALESCE(JSON_ARRAYAGG(g.name), JSON_ARRAY()) AS genres FROM Films AS f  
+        LEFT JOIN Film_Genre fg ON f.id = fg.filmId  
+        LEFT JOIN Genres g ON g.id = fg.genreId  
         JOIN Users u ON f.adminId = u.id  
         WHERE f.id=?  
         GROUP BY f.id`;
@@ -48,10 +48,11 @@ const findById = async (id) => {
                 id: resultat[0][0].id,
                 title: resultat[0][0].title,
                 poster: resultat[0][0].poster,
-                releaseDate: resultat[0][0].releaseDate,
+                releaseDate: resultat[0][0].releaseDate.toISOString().split("T")[0],
                 addedDate: resultat[0][0].addedDate,
                 admin: resultat[0][0].admin,
-                genres: resultat[0][0].genres
+                genres: resultat[0][0].genres,
+                description: resultat[0][0].description
             };
         } else {
             throw new Error("Aucun film n'a été trouvé avec cet identifiant");
@@ -82,14 +83,14 @@ const add = async (film) => {
 }
 
 const updateById = async (id, film) => {
-    const INSERT = "UPDATE Films SET title=? poster=? releaseDate=? description=? addedDate=? adminId=? WHERE id=?";
+    const UPDATE = "UPDATE Films SET title=?, poster=?, releaseDate=?, description=?, addedDate=?, adminId=? WHERE id=?";
     try {
         const resultat = await connection.query(UPDATE, [film.title, film.poster, film.releaseDate, film.description, film.addedDate, film.adminId, id]);
         if (resultat[0].affectedRows > 0) {
             const removeGenres = await Film_Genre_Repository.removeByFilmId(film.id);
-            if (removeGenres.affectedRows > 0) {
+            if (removeGenres > 0) {
                 const addNewGenres = await Film_Genre_Repository.addMultiple(film.id, film.genres);
-                if (addNewGenres.affectedRows > 0) {
+                if (addNewGenres > 0) {
                     return resultat[0].affectedRows;
                 } else {
                     throw new Error("Les nouveaux genres du film n'ont pas pu être insérés");
