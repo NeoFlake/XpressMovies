@@ -8,6 +8,7 @@ router.use(AuthentificationService.requireLogin);
 
 router
     .get("/", HomepageController.displayView)
+    .get("/favori/:id", HomepageController.addNewFavori)
     .post("/", HomepageController.searchByTitle);
 
 export default router;
