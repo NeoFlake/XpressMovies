@@ -58,8 +58,7 @@
                                                 onclick="window.location.href='/administration/films/modify/<%= film.id %>'"
                                                 class="btn btn-primary me-2">Modifier</button>
                                             <% } else { %>
-                                                <% if((films.favori !==[null] && user.favoris.some(favori=> favori.id
-                                                    === film.id))) { %>
+                                                <% if((user.favoris.filter(f => f !== null).length > 0 && user.favoris.some(favori => favori.id === film.id))) { %>
                                                     <i class="fa-solid fa-star yellowstar"></i>
                                                     <% } else { %>
                                                         <i class="fa-regular fa-star cursor-pointer"
