@@ -26,8 +26,6 @@ const addMultiple = async (filmId, genreIds) => {
             throw new Error("Les nouveaux genres n'ont pas étés postés en base");
         }
     } catch (error) {
-        console.log(error.message);
-        
         throw new Error(error);
     }
 }

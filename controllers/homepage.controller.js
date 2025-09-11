@@ -28,10 +28,6 @@ const displayView = async (req, res) => {
             films = await FilmsRepository.findAll();
         }
         films = DateService.formatterDateFilm(films);
-
-        console.log(user);
-        
-        
         res.render("homepage", { user: user, films: films, error: "", isAdmin: req.session.userLogged.role === "ADMIN" ? true : false });
     } catch (error) {
         res.render("homepage", { films: [], error: error.message });
