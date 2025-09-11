@@ -72,10 +72,8 @@ const findLikeByTitle = async (title) => {
         GROUP BY f.id`;
     try {
         const resultat = await connection.query(SELECT, [`%${title}%`]);
-        console.log(resultat[0]);
-
-        if (resultat[0].length > 0) {
-            return resultat[0].map(film => { return { ...film, releaseDate: film.releaseDate.toISOString().split("T")[0] }; });
+        if (resultat[0].length > 0) {  
+            return resultat[0];
         } else {
             throw new Error("Aucun film n'a été trouvé avec ce filtre");
         }

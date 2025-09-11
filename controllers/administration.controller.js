@@ -1,10 +1,7 @@
 import GenresRepository from "../repositories/genres.repository.js";
 import FilmsRepository from "../repositories/films.repository.js";
 import yup from '../config/yup.config.js';
-import dayjs from "dayjs";
-import "dayjs/locale/fr.js";
-
-dayjs.locale("fr");
+import DateService from "../services/date.service.js";
 
 const modifyGenreSchema = yup.object().shape({
     nameM: yup
@@ -78,7 +75,7 @@ const displayAdminPage = async (req, res) => {
         let films = await FilmsRepository.findAll();
 
         if (films.length > 0) {
-            films = formatterDateFilm(films);
+            films = DateService.formatterDateFilm(films);
         }
         
         const flashIdGenreToModify = req.flash("idGenreToModify");
@@ -222,7 +219,7 @@ const addFilm = async (req, res) => {
                 poster: req.body.poster,
                 releaseDate: req.body.releaseDate,
                 description: req.body.description,
-                adminId: 1 // TODO: remplaçer par le paramètre de session adéquat!
+                adminId: req.session.userLogged.id
             }
             const add = await FilmsRepository.add(filmToAdd);
             if (add) {
@@ -275,7 +272,7 @@ const modifierFilm = async (req, res) => {
                     description: req.body.descriptionM,
                     addedDate: filmOnBase.addedDate,
                     genres: req.body.genresM,
-                    adminId: 1 // TODO: remplaçer par le paramètre de session adéquat!
+                    adminId: req.session.userLogged.id
                 });
                 if (update) {
                     res.redirect("/administration");
@@ -290,16 +287,6 @@ const modifierFilm = async (req, res) => {
         req.flash("filmError", error.message);
         res.redirect("/administration");
     }
-}
-
-const formatterDateFilm = (films) => {
-    let results = films;
-
-    results.forEach(film => {
-        film.releaseDate = dayjs(film.releaseDate).format("dddd D MMMM YYYY");
-    });
-
-    return results;
 }
 
 export default { displayAdminPage, addGenre, displayModifierGenreForm, modifierGenre, supprimerGenre, addFilm, supprimerFilm, displayModifierFilmForm, modifierFilm };

@@ -1,10 +1,7 @@
 import FilmsRepository from "../repositories/films.repository.js";
 import UserRepository from "../repositories/users.repository.js";
 import yup from '../config/yup.config.js';
-import dayjs from "dayjs";
-import "dayjs/locale/fr.js";
-
-dayjs.locale("fr");
+import DateService from '../services/date.service.js';
 
 const searchByTitleSchema = yup.object().shape({
     title: yup
@@ -26,12 +23,11 @@ const displayView = async (req, res) => {
 
         if (searchByTitle) {
             films = await FilmsRepository.findLikeByTitle(titleSearched);
-
-            console.log(films);
-            
         } else {
             films = await FilmsRepository.findAll();
         }
+        films = DateService.formatterDateFilm(films);
+        
         res.render("homepage", { films: films, error: "", isAdmin: req.session.userLogged.role === "ADMIN" ? true : false });
     } catch (error) {
         res.render("homepage", { films: [], error: error.message });
