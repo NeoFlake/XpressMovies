@@ -7,6 +7,7 @@ const router = express.Router();
 router.use(AuthentificationService.requireLogin);
 
 router
-    .get("/", HomepageController.displayView);
+    .get("/", HomepageController.displayView)
+    .post("/", HomepageController.searchByTitle);
 
 export default router;

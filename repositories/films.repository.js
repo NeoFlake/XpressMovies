@@ -57,7 +57,29 @@ const findById = async (id) => {
         } else {
             throw new Error("Aucun film n'a été trouvé avec cet identifiant");
         }
-    } catch (error) { 
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+const findLikeByTitle = async (title) => {
+    const SELECT = `SELECT f.id, f.title, f.poster, f.releaseDate, f.description,
+        f.addedDate, u.lastname AS admin, COALESCE(JSON_ARRAYAGG(g.name), JSON_ARRAY()) AS genres FROM Films AS f  
+        LEFT JOIN Film_Genre fg ON f.id = fg.filmId  
+        LEFT JOIN Genres g ON g.id = fg.genreId  
+        JOIN Users u ON f.adminId = u.id  
+        WHERE f.title LIKE ?  
+        GROUP BY f.id`;
+    try {
+        const resultat = await connection.query(SELECT, [`%${title}%`]);
+        console.log(resultat[0]);
+
+        if (resultat[0].length > 0) {
+            return resultat[0].map(film => { return { ...film, releaseDate: film.releaseDate.toISOString().split("T")[0] }; });
+        } else {
+            throw new Error("Aucun film n'a été trouvé avec ce filtre");
+        }
+    } catch (error) {
         throw new Error(error);
     }
 }
@@ -120,9 +142,9 @@ const deleteById = async (id) => {
         } else {
             throw new Error("La suppression du film n'a pas pu être effectué");
         }
-    } catch (error) {   
+    } catch (error) {
         throw new Error(error);
     }
 }
 
-export default { findAll, findById, existByTitle, add, updateById, deleteById }
+export default { findAll, findById, existByTitle, findLikeByTitle, add, updateById, deleteById }

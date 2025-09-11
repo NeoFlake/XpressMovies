@@ -55,26 +55,35 @@ const findByEmail = async (email) => {
 }
 
 const findById = async (id) => {
-    const SELECT = `SELECT u.id, u.lastname, u.firstname, u.email, u.password,
-        COALESCE(
-        JSON_ARRAYAGG(
-        JSON_OBJECT(
-        'id', f.id,
-        'title', f.title,
-        'poster', f.poster,
-        'releaseDate', f.releaseDate,
-        'addedDate', f.addedDate,
-        'genres', COALESCE(
-        JSON_ARRAYAGG(DISTINCT g.nom), JSON_ARRAY()
-        ))), JSON_ARRAY()
-        ) AS favoris, 
-        u.role FROM Users AS 
-        LEFT JOIN Favorites fav ON fav.user_id = u.id
-        LEFT JOIN Films f ON f.id = fav.film_id
-        LEFT JOIN Film_Genre fg ON fg.film_id = f.id
-        LEFT JOIN Genres g ON g.id = fg.genre_id
-        WHERE u.id = ?
-        GROUP BY u.id, f.id`;
+    const SELECT = `SELECT 
+                    u.id, u.lastname, u.firstname, u.email, u.password, 
+                    COALESCE(
+                        JSON_ARRAYAGG(
+                            CASE 
+                                WHEN f.id IS NOT NULL THEN JSON_OBJECT(
+                                    'id', f.id, 
+                                    'title', f.title, 
+                                    'poster', f.poster, 
+                                    'releaseDate', f.releaseDate, 
+                                    'addedDate', f.addedDate, 
+                                    'genres', fg.genres
+                                )
+                            END
+                        ),
+                        JSON_ARRAY()
+                    ) AS favoris,
+                    u.role
+                FROM Users AS u
+                LEFT JOIN Favoris fav ON fav.userId = u.id
+                LEFT JOIN Films f ON f.id = fav.filmId
+                LEFT JOIN (
+                    SELECT fg.filmId, JSON_ARRAYAGG(g.name) AS genres
+                    FROM Film_Genre AS fg
+                    JOIN Genres g ON g.id = fg.genreId
+                    GROUP BY fg.filmId
+                ) AS fg ON fg.filmId = f.id
+                WHERE u.id = ?
+                GROUP BY u.id`;
     try {
         const resultat = await connection.query(SELECT, [id]);
         if (resultat[0].length > 0) {
