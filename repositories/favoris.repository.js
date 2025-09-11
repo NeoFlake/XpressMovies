@@ -29,7 +29,7 @@ const addMultiple = async (userId, filmIds) => {
     }
 }
 
-const removeByFilmAndUserId = async (userId, filmId) => {
+const removeByUserAndFilmId = async (userId, filmId) => {
     const DELETE = `DELETE FROM Favoris WHERE userId=? AND filmId=?`;
     try {
         const deleted = await connection.query(DELETE, [userId, filmId]);
@@ -71,4 +71,4 @@ const removeByFilmId = async (id) => {
     }
 }
 
-export default { add, addMultiple, removeByUserId, removeByFilmId, removeByFilmAndUserId }
+export default { add, addMultiple, removeByUserId, removeByFilmId, removeByUserAndFilmId }

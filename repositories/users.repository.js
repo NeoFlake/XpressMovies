@@ -64,6 +64,7 @@ const findById = async (id) => {
                                     'id', f.id, 
                                     'title', f.title, 
                                     'poster', f.poster, 
+                                    'description', f.description,
                                     'releaseDate', f.releaseDate, 
                                     'addedDate', f.addedDate, 
                                     'genres', fg.genres
