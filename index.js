@@ -5,6 +5,7 @@ import authentification from "./routes/authentification.route.js";
 import homepage from "./routes/homepage.route.js";
 import administration from "./routes/administration.route.js";
 import favoris from "./routes/favoris.route.js";
+import profile from "./routes/profile.route.js";
 import flash from "connect-flash";
 
 const app = express();
@@ -31,7 +32,8 @@ const PORT = process.env.PORT || 5555;
 app.use("/authentification", authentification);
 app.use("/homepage", homepage);
 app.use("/administration", administration);
-app.use("/favoris", favoris)
+app.use("/favoris", favoris);
+app.use("/profile", profile);
 
 // Configuration du moteur de template
 app.set("view engine", "ejs");
