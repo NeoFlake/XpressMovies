@@ -8,6 +8,7 @@ router.use(AuthentificationService.requireLogin);
 
 router
     .get("/", ProfileController.displayView)
+    .get("/:id", ProfileController.remove)
     .post("/:id", ProfileController.update);
 
 export default router;

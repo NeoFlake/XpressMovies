@@ -19,17 +19,20 @@
         <div class="row d-flex justify-content-center">
             <h1 class="col-3">Gestion du profil</h1>
         </div>
+        <%- include('partials/destroying-account-modal') %>
         <div class="row">
             <h3 class="mt-5 mb-4 text-decoration-underline">Modifier son compte</h3>
             <form method="post" action="/profile/<%= user.id %>" class="col-4">
                 <input type="hidden" id="id" name="id" value="<%= user.id %>">
                 <div class="mb-3">
                     <label for="lastname" class="form-label">Nom</label>
-                    <input type="text" class="form-control" id="lastname" name="lastname" value="<%= user.lastname %>" />
+                    <input type="text" class="form-control" id="lastname" name="lastname"
+                        value="<%= user.lastname %>" />
                 </div>
                 <div class="mb-3">
                     <label for="firstname" class="form-label">Prénom</label>
-                    <input type="text" class="form-control" id="firstname" name="firstname" value="<%= user.firstname %>" />
+                    <input type="text" class="form-control" id="firstname" name="firstname"
+                        value="<%= user.firstname %>" />
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
@@ -57,6 +60,10 @@
                     <button type="submit" class="btn btn-primary col-5">Modifier</button>
                 </div>
             </form>
+        </div>
+        <div class="row mt-5">
+            <button class="btn btn-danger col-4" data-bs-toggle="modal" data-bs-target="#destroying-account-modale"
+                data-bs-id="<%= user.id %>">Supprimer compte</button>
         </div>
     </div>
 </body>

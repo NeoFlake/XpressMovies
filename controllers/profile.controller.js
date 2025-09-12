@@ -67,4 +67,18 @@ const update = async (req, res) => {
     }
 }
 
-export default { displayView, update };
+const remove = async (req, res) => {
+    try {
+        const remove = await UserRepository.deleteById(req.params.id);
+        if(remove > 0){
+            delete req.session.userLogged;
+            res.redirect("/authentification/login");
+        } else {
+            throw new Error("La suppression de votre compte n'a pas pu se faire; veuillez réessayer");
+        }
+    } catch (error) {
+        res.redirect("/profile");
+    }
+}
+
+export default { displayView, update, remove };
