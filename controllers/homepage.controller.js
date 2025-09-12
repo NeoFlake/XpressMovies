@@ -1,15 +1,7 @@
 import FilmsRepository from "../repositories/films.repository.js";
 import UserRepository from "../repositories/users.repository.js";
 import FavoriRepository from "../repositories/favoris.repository.js";
-import yup from '../config/yup.config.js';
 import DateService from '../services/date.service.js';
-
-const searchByTitleSchema = yup.object().shape({
-    title: yup
-        .string("Titre invalide")
-        .required("L'intitulé du film est obligatoire pour la validation")
-        .matches(/^[A-Za-zÀ-ÖØ-öø-ÿ0-9 \-\/_]{3,200}$/, "Ce titre de film n'est pas disponible"),
-});
 
 const displayView = async (req, res) => {
     try {

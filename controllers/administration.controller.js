@@ -1,73 +1,7 @@
 import GenresRepository from "../repositories/genres.repository.js";
 import FilmsRepository from "../repositories/films.repository.js";
-import yup from '../config/yup.config.js';
 import DateService from "../services/date.service.js";
-
-const modifyGenreSchema = yup.object().shape({
-    nameM: yup
-        .string("Genre invalide")
-        .required("L'intitulé de genre est obligatoire pour la validation")
-        .matches(/^[A-Za-zÀ-ÖØ-öø-ÿ ]{3,64}$/, "Cet intitulé de genre n'est pas disponible")
-});
-
-const genreSchema = yup.object().shape({
-    name: yup
-        .string("Genre invalide")
-        .required("L'intitulé du genre est obligatoire pour la validation")
-        .matches(/^[A-Za-zÀ-ÖØ-öø-ÿ ]{3,64}$/, "Cet intitulé de genre n'est pas disponible")
-});
-
-const filmSchema = yup.object().shape({
-    title: yup
-        .string("Titre invalide")
-        .required("L'intitulé du film est obligatoire pour la validation")
-        .matches(/^[A-Za-zÀ-ÖØ-öø-ÿ0-9 \-\/_]{3,200}$/, "Cet intitulé de genre n'est pas disponible"),
-
-    genres: yup
-        .array()
-        .of(yup.number().required())
-        .min(1, "Un genre minimum est obligatoire pour la validation")
-        .required("Un genre minimum est obligatoire pour la validation"),
-
-    poster: yup
-        .string("Lien poster invalide")
-        .required("L'affiche du film est obligatoire pour la validation")
-        .matches(/^(https?:\/\/[^\s]+?\.(?:jpg|jpeg|png|gif|webp|svg))(?:\?.*)?$/i, "l'adresse de l'affiche n'est pas valide"),
-
-    releaseDate: yup
-        .date("Le format doit être au format date")
-        .required("La date de sorti du film est obligatoire pour la validation"),
-
-    description: yup
-        .string("Pitch invalide")
-        .required("Le pitch du film est obligatoire pour la validation")
-});
-
-const modifyFilmSchema = yup.object().shape({
-    titleM: yup
-        .string("Titre invalide")
-        .required("L'intitulé du film est obligatoire pour la validation")
-        .matches(/^[A-Za-zÀ-ÖØ-öø-ÿ0-9 \-\/_]{3,200}$/, "Cet intitulé de genre n'est pas disponible"),
-
-    genresM: yup
-        .array()
-        .of(yup.number().required())
-        .min(1, "Un genre minimum est obligatoire pour la validation")
-        .required("Un genre minimum est obligatoire pour la validation"),
-
-    posterM: yup
-        .string("Lien poster invalide")
-        .required("L'affiche du film est obligatoire pour la validation")
-        .matches(/^(https?:\/\/[^\s]+?\.(?:jpg|jpeg|png|gif|webp|svg))(?:\?.*)?$/i, "l'adresse de l'affiche n'est pas valide"),
-
-    releaseDateM: yup
-        .date("Le format doit être au format date")
-        .required("La date de sorti du film est obligatoire pour la validation"),
-
-    descriptionM: yup
-        .string("Pitch invalide")
-        .required("Le pitch du film est obligatoire pour la validation")
-});
+import ValidationService from "../services/validation.service.js";
 
 const displayAdminPage = async (req, res) => {
     try {
@@ -142,7 +76,7 @@ const displayAdminPage = async (req, res) => {
 
 const addGenre = async (req, res) => {
     try {
-        await genreSchema.validate(req.body);
+        await ValidationService.genreSchema.validate(req.body);
         const nameKnown = await GenresRepository.nameAlreadyKnown(req.body.name);
         if (nameKnown) {
             throw new Error("Cet intitulé de genre de film existe déjà");
@@ -169,7 +103,7 @@ const displayModifierGenreForm = (req, res) => {
 const modifierGenre = async (req, res) => {
     try {
         if (req.params.id === req.body.id) {
-            await modifyGenreSchema.validate(req.body);
+            await ValidationService.modifyGenreSchema.validate(req.body);
             const nameKnown = await GenresRepository.nameAlreadyKnown(req.body.nameM);
             const genreOnBase = await GenresRepository.findById(req.body.id);
             if (genreOnBase.name !== req.body.nameM && nameKnown) {
@@ -208,7 +142,7 @@ const supprimerGenre = async (req, res) => {
 const addFilm = async (req, res) => {
 
     try {
-        await filmSchema.validate(req.body);
+        await ValidationService.filmSchema.validate(req.body);
         const titleKnown = await FilmsRepository.existByTitle(req.body.title);
         if (titleKnown) {
             throw new Error("Ce titre de film existe déjà");
@@ -258,7 +192,7 @@ const displayModifierFilmForm = (req, res) => {
 const modifierFilm = async (req, res) => {
     try {   
         if (req.params.id === req.body.id) {
-            await modifyFilmSchema.validate(req.body);
+            await ValidationService.modifyFilmSchema.validate(req.body);
             const titleKnown = await FilmsRepository.existByTitle(req.body.titleM);
             const filmOnBase = await FilmsRepository.findById(req.body.id);
             if (filmOnBase.title !== req.body.titleM && titleKnown) {

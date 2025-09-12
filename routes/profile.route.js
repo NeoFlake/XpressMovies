@@ -7,6 +7,7 @@ const router = express.Router();
 router.use(AuthentificationService.requireLogin);
 
 router
-    .get("/", ProfileController.displayView);
+    .get("/", ProfileController.displayView)
+    .post("/:id", ProfileController.update);
 
 export default router;

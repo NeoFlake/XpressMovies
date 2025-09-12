@@ -120,7 +120,7 @@ const add = async (user) => {
 }
 
 const updateById = async (id, user) => {
-    const INSERT = "UPDATE Users SET lastname=? firstname=? email=? password=? WHERE id=?";
+    const UPDATE = "UPDATE Users SET lastname=?, firstname=?, email=?, password=? WHERE id=?";
     try {
         const resultat = await connection.query(UPDATE, [user.lastname, user.firstname, user.email, user.password, id]);
         if (resultat[0].affectedRows > 0) {
