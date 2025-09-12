@@ -6,6 +6,7 @@ import homepage from "./routes/homepage.route.js";
 import administration from "./routes/administration.route.js";
 import favoris from "./routes/favoris.route.js";
 import profile from "./routes/profile.route.js";
+import logout from "./routes/logout.route.js";
 import flash from "connect-flash";
 
 const app = express();
@@ -34,6 +35,7 @@ app.use("/homepage", homepage);
 app.use("/administration", administration);
 app.use("/favoris", favoris);
 app.use("/profile", profile);
+app.use("/logout", logout);
 
 // Configuration du moteur de template
 app.set("view engine", "ejs");

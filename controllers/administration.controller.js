@@ -2,16 +2,18 @@ import GenresRepository from "../repositories/genres.repository.js";
 import FilmsRepository from "../repositories/films.repository.js";
 import DateService from "../services/date.service.js";
 import ValidationService from "../services/validation.service.js";
+import usersRepository from "../repositories/users.repository.js";
 
 const displayAdminPage = async (req, res) => {
     try {
         const genres = await GenresRepository.findAll();
         let films = await FilmsRepository.findAll();
+        let user = await usersRepository.findById(req.session.userLogged.id);
 
         if (films.length > 0) {
             films = DateService.formatterDateFilm(films);
         }
-        
+
         const flashIdGenreToModify = req.flash("idGenreToModify");
         const flashDisplayModifyGenreForm = req.flash("displayModifyGenreForm");
         const flashIdFilmToModify = req.flash("idFilmToModify");
@@ -21,6 +23,14 @@ const displayAdminPage = async (req, res) => {
         const displayModifyGenreForm = flashDisplayModifyGenreForm.length > 0 ? flashDisplayModifyGenreForm[0] : false;
         const idFilmToModify = flashIdFilmToModify.length > 0 ? flashIdFilmToModify[0] : 0;
         const displayModifyFilmForm = flashDisplayModifyFilmForm.length > 0 ? flashDisplayModifyFilmForm[0] : false;
+
+        const navbar = {
+                    isAdmin: req.session.userLogged.role === "ADMIN" ? true : false,
+                    favoris: user.favoris.filter(f => f !== null).length,
+                    currentRoute: req.baseUrl,
+                    lastname: user.lastname,
+                    firstname: user.firstname
+                };
 
         if (displayModifyGenreForm) {
             const genreToModify = await GenresRepository.findById(idGenreToModify);
@@ -35,12 +45,13 @@ const displayAdminPage = async (req, res) => {
                     displayModifyFilmForm: displayModifyFilmForm,
                     filmToModify: null
                 },
+                navbar: navbar,
                 error: { genreError: req.flash("genreError"), filmError: req.flash("filmError") }
             });
         } else if (displayModifyFilmForm) {
-            
+
             const filmToModify = await FilmsRepository.findById(idFilmToModify);
-            
+
             res.render("administration", {
                 genres: {
                     list: genres,
@@ -52,6 +63,7 @@ const displayAdminPage = async (req, res) => {
                     displayModifyFilmForm: displayModifyFilmForm,
                     filmToModify: filmToModify
                 },
+                navbar: navbar,
                 error: { genreError: req.flash("genreError"), filmError: req.flash("filmError") }
             });
         } else {
@@ -66,11 +78,14 @@ const displayAdminPage = async (req, res) => {
                     displayModifyFilmForm: displayModifyFilmForm,
                     filmToModify: null
                 },
+                navbar: navbar,
                 error: { genreError: req.flash("genreError"), filmError: req.flash("filmError") }
             });
         }
     } catch (error) {
-        res.render("administration", { genres: { list: [] }, films: { list: [] }, error: { genreError: error.message } });
+        res.render("administration", {
+            genres: { list: [] }, films: { list: [] }, navbar: navbar, error: { genreError: error.message }
+        });
     }
 }
 
@@ -183,14 +198,14 @@ const supprimerFilm = async (req, res) => {
     }
 }
 
-const displayModifierFilmForm = (req, res) => { 
+const displayModifierFilmForm = (req, res) => {
     req.flash("displayModifierFilmForm", true);
     req.flash("idFilmToModify", req.params.id);
     res.redirect("/administration");
 }
 
 const modifierFilm = async (req, res) => {
-    try {   
+    try {
         if (req.params.id === req.body.id) {
             await ValidationService.modifyFilmSchema.validate(req.body);
             const titleKnown = await FilmsRepository.existByTitle(req.body.titleM);
@@ -198,7 +213,7 @@ const modifierFilm = async (req, res) => {
             if (filmOnBase.title !== req.body.titleM && titleKnown) {
                 throw new Error("Cet intitulé de film existe déjà");
             } else {
-                const update = await FilmsRepository.updateById(req.params.id, { 
+                const update = await FilmsRepository.updateById(req.params.id, {
                     id: req.body.id,
                     title: req.body.titleM,
                     poster: req.body.posterM,
@@ -217,7 +232,7 @@ const modifierFilm = async (req, res) => {
         } else {
             throw new Error("Erreur technique lors de la soumission du formulaire");
         }
-    } catch (error) {   
+    } catch (error) {
         req.flash("filmError", error.message);
         res.redirect("/administration");
     }

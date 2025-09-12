@@ -11,7 +11,7 @@ const displayView = async (req, res) => {
         const flashSearchByTitle = req.flash("searchByTitle");
         const flashTitleSearched = req.flash("titleSearched");
 
-        const searchByTitle = flashSearchByTitle.length > 0 ? flashSearchByTitle[0] : false; 
+        const searchByTitle = flashSearchByTitle.length > 0 ? flashSearchByTitle[0] : false;
         const titleSearched = flashTitleSearched.length > 0 ? flashTitleSearched[0] : "";
 
         if (searchByTitle) {
@@ -20,7 +20,20 @@ const displayView = async (req, res) => {
             films = await FilmsRepository.findAll();
         }
         films = DateService.formatterDateFilm(films);
-        res.render("homepage", { user: user, films: films, error: "", isAdmin: req.session.userLogged.role === "ADMIN" ? true : false });
+        const isAdmin = req.session.userLogged.role === "ADMIN" ? true : false;
+        res.render("homepage", { 
+            user: user, 
+            films: films, 
+            error: "", 
+            isAdmin: isAdmin, 
+            navbar: {
+                isAdmin: isAdmin,
+                favoris: user.favoris.filter(f => f !== null).length, 
+                currentRoute: req.baseUrl,
+                lastname: user.lastname,
+                firstname: user.firstname
+            }
+        });
     } catch (error) {
         res.render("homepage", { films: [], error: error.message });
     }
@@ -44,7 +57,7 @@ const addNewFavori = async (req, res) => {
             userId: req.session.userLogged.id,
             filmId: req.params.id
         });
-        if(favori > 0){
+        if (favori > 0) {
             res.redirect("/homepage");
         } else {
             throw new Error("Votre favori n'a pas pu être ajouté");

@@ -7,7 +7,16 @@ const saltRounds = 10;
 const displayView = async (req, res) => {
     try {
         const user = await UserRepository.findById(req.session.userLogged.id);
-        res.render("profile", { user: user });
+        res.render("profile", {
+            user: user,
+            navbar: {
+                isAdmin: req.session.userLogged.role === "ADMIN" ? true : false,
+                favoris: user.favoris.filter(f => f !== null).length,
+                currentRoute: req.baseUrl,
+                lastname: user.lastname,
+                firstname: user.firstname
+            }
+        });
     } catch (error) {
         res.render("profile");
     }
@@ -70,7 +79,7 @@ const update = async (req, res) => {
 const remove = async (req, res) => {
     try {
         const remove = await UserRepository.deleteById(req.params.id);
-        if(remove > 0){
+        if (remove > 0) {
             delete req.session.userLogged;
             res.redirect("/authentification/login");
         } else {
