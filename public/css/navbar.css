@@ -1,7 +1,23 @@
-.navbar {
-    background-color: blue !important;
-}
-
 .top-page {
   margin-top: 9%;
+}
+
+.navbar {
+  background: linear-gradient(180deg, #2A2A2A 0%, #1C1C1C 100%) !important;
+  border-bottom: 1px solid rgba(255, 69, 0, 0.3);
+}
+
+.navbar .nav-link {
+  color: #F5F5F5 !important;
+  transition: color 0.3s ease;
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link.active {
+  color: #FF4500 !important;
+}
+
+.navbar-brand {
+  color: #FFFFFF !important;
+  font-weight: bold;
 }

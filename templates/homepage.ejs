@@ -9,6 +9,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
     <link rel="stylesheet" href="../css/homepage.css" />
+    <link rel="stylesheet" href="../css/custom-color.css" />
+    <link rel="stylesheet" href="../css/font.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
         crossorigin="anonymous"></script>
@@ -35,16 +38,17 @@
             </form>
         </div>
         <% if(films.length> 0) { %>
+            <%- include('partials/full-poster-modal') %>
             <div class="row mt-5">
                 <% films.forEach(film=> { %>
                     <div class="card col-3 mt-1">
-                        <img src="<%= film.poster %>" class="card-img-top" alt="une belle affiche">
+                            <img src="<%= film.poster %>" class="card-img-top" alt="une belle affiche" />
                         <div class="card-body">
                             <h5 class="card-title">
                                 <%= film.title %>
                             </h5>
                             <% film.genres.forEach(genre=> { %>
-                                <span class="badge text-bg-primary mb-2">
+                                <span class="badge bg-primary text-bg-primary mb-2">
                                     <%= genre %>
                                 </span>
                                 <% }); %>

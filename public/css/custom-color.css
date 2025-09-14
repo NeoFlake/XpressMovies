@@ -1,0 +1,77 @@
+:root {
+  --bs-primary: #FF4500 !important;       
+  --bs-secondary: #2A2A2A !important;     
+  --bs-dark: #1C1C1C !important;          
+  --bs-warning: #FFD700 !important;       
+  --bs-danger: #DC143C !important;        
+  --bs-success: #32CD32 !important;      
+  --bs-body-color: #F5F5F5 !important;    
+  --bs-body-bg: #2A2A2A !important; 
+}
+
+body {
+  background: linear-gradient(160deg, #1C1C1C 0%, #2A1C0D 40%, #3B1F0E 100%);
+  color: #F5F5F5;
+  min-height: 100vh;
+}
+
+.btn-primary {
+  background-color: #FF4500 !important;
+  border-color: #FF4500 !important;
+  color: #fff !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: #E03E00 !important;
+  border-color: #E03E00 !important;
+}
+
+.btn-warning {
+  background-color: #FFD700 !important;
+  border-color: #FFD700 !important;
+  color: #111 !important;
+}
+
+.btn-danger {
+  background-color: #DC143C !important;
+  border-color: #DC143C !important;
+}
+
+.btn-success {
+  background-color: #32CD32 !important;
+  border-color: #32CD32 !important;
+}
+
+.text-primary {
+  color: #FF4500 !important;
+}
+.bg-dark {
+  background-color: #1C1C1C !important;
+}
+.bg-secondary {
+  background-color: #2A2A2A !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+div,
+.badge {
+  cursor: default;
+}
+
+.bg-primary {
+  background-color: var(--bs-primary) !important;
+}
+
+.bg-info {
+  background-color: var(--bs-primary) !important;
+}
+
+.bg-info {
+  background-color: #FF7F50 !important; /* corail/orangé clair */
+  color: #fff !important;
+}

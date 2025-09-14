@@ -24,3 +24,16 @@
 .cursor-pointer {
     cursor: pointer;
 }
+
+.card-img-top {
+  height: 300px;
+  width: 100%;
+  object-fit: contain;
+  background-color: #2A2A2A;
+  transition: transform 0.5s ease;
+  cursor: pointer;
+}
+
+.card-img-top:hover {
+  transform: scale(1.05);
+}
