@@ -21,3 +21,8 @@
   color: #FFFFFF !important;
   font-weight: bold;
 }
+
+.btn-outline-info {
+  border-color: #FF4500 !important;
+  color: #FF4500 !important;
+}
