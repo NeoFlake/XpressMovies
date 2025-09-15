@@ -2,6 +2,9 @@ import FilmsRepository from "../repositories/films.repository.js";
 import UserRepository from "../repositories/users.repository.js";
 import FavoriRepository from "../repositories/favoris.repository.js";
 import DateService from '../services/date.service.js';
+import { FRONTEND } from "../constantes/homepage.js";
+import { VIEW_LIBELLE, ROLE_LIBELLE } from "../constantes/views.js";
+import { ERROR_LIBELLE } from "../constantes/errors.js";
 
 const displayView = async (req, res) => {
     try {
@@ -20,7 +23,7 @@ const displayView = async (req, res) => {
             films = await FilmsRepository.findAll();
         }
         films = DateService.formatterDateFilm(films);
-        const isAdmin = req.session.userLogged.role === "ADMIN" ? true : false;
+        const isAdmin = req.session.userLogged.role === ROLE_LIBELLE.ADMIN ? true : false;
 
         const card = {
             user: user,
@@ -29,7 +32,7 @@ const displayView = async (req, res) => {
             currentRoute: req.baseUrl
         };
 
-        res.render("homepage", {
+        res.render(VIEW_LIBELLE.HOMEPAGE, {
             user: user,
             films: films,
             error: "",
@@ -41,10 +44,12 @@ const displayView = async (req, res) => {
                 lastname: user.lastname,
                 firstname: user.firstname
             },
-            card: card
+            card: card,
+            FRONTEND: FRONTEND,
+            VIEW_LIBELLE: VIEW_LIBELLE
         });
     } catch (error) {
-        res.render("homepage", { films: [], error: error.message });
+        res.render(VIEW_LIBELLE.HOMEPAGE, { films: [], error: error.message });
     }
 }
 
@@ -53,10 +58,10 @@ const searchByTitle = async (req, res) => {
         await searchByTitleSchema.validate(req.body);
         req.flash("searchByTitle", true);
         req.flash("titleSearched", req.body.title);
-        res.redirect("/homepage");
+        res.redirect(`/${VIEW_LIBELLE.HOMEPAGE}`);
     } catch (error) {
         req.flash("error", error.message);
-        res.redirect("/homepage");
+        res.redirect(`/${VIEW_LIBELLE.HOMEPAGE}`);
     }
 }
 
@@ -67,13 +72,13 @@ const addNewFavori = async (req, res) => {
             filmId: req.params.id
         });
         if (favori > 0) {
-            res.redirect("/homepage");
+            res.redirect(`/${VIEW_LIBELLE.HOMEPAGE}`);
         } else {
-            throw new Error("Votre favori n'a pas pu être ajouté");
+            throw new Error(ERROR_LIBELLE.NEW_FAVORI_ERROR);
         }
     } catch (error) {
         req.flash("error", error.message);
-        res.redirect("/homepage");
+        res.redirect(`/${VIEW_LIBELLE.HOMEPAGE}`);
     }
 }
 

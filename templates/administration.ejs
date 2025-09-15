@@ -13,25 +13,25 @@
   <div class="container">
     <%- include('partials/navbar') %>
     <div class="row d-flex justify-content-center mt-5">
-      <h1 class="col-5">Console Administrateur</h1>
+      <h1 class="col-5"><%= FRONTEND.TITLE_PAGE %></h1>
     </div>
     <!-- Section gestion des films -->
     <div class="row mt-5">
-      <h3 class="col-5 text-decoration-underline">Gestion des films</h3>
+      <h3 class="col-5 text-decoration-underline"><%= FRONTEND.TITLE_FILM_MANAGEMENT %></h3>
     </div>
     <% if(films.list.length> 0) { %>
     <%- include('partials/film-card') %>
     <% } %>
     <div class="row mt-3">
       <% if(films.displayModifyFilmForm) { %>
-      <form method="post" action="/administration/films/<%= films.filmToModify.id %>" class="row col-6">
+      <form method="post" action="<%= `/${VIEW_LIBELLE.ADMINISTRATION}/${VIEW_LIBELLE.FILMS}/${films.filmToModify.id}` %>" class="row col-6">
         <input type="hidden" name="id" value="<%= films.filmToModify.id %>">
         <div class="mb-3 col-8">
-          <label for="titleM" class="form-label">Titre</label>
+          <label for="titleM" class="form-label"><%= FRONTEND.FILM_FORM_LIBELLE.TITLE %></label>
           <input type="text" class="form-control" id="titleM" name="titleM" value="<%= films.filmToModify.title %>" />
         </div>
         <div class="mb-3 col-8">
-          <label for="genresM" class="form-label">Genre(s)</label>
+          <label for="genresM" class="form-label"><%= FRONTEND.FILM_FORM_LIBELLE.GENRE_SELECTION %></label>
           <select class="form-select" id="genresM" name="genresM[]" multiple>
             <% genres.list.forEach(genre=> { %>
             <option value="<%= genre.id %>" <%=films.filmToModify.genres.includes(genre.name) ? 'selected' : ''
@@ -42,32 +42,31 @@
           </select>
         </div>
         <div class="mb-3 col-8">
-          <label for="posterM" class="form-label">Affiche</label>
+          <label for="posterM" class="form-label"><%= FRONTEND.FILM_FORM_LIBELLE.POSTER %></label>
           <input type="text" class="form-control" id="posterM" name="posterM" value="<%= films.filmToModify.poster %>" />
-          <div id="posterHelp" class="form-text">Entrez une url finissant par un format d'image valide (jpg,
-            jpeg...)</div>
+          <div id="posterHelp" class="form-text"><%= FRONTEND.FILM_FORM_LIBELLE.POSTER_HELPER %></div>
         </div>
         <div class="mb-3 col-8">
-          <label for="releaseDateM" class="form-label">Date de sortie au cinéma</label>
+          <label for="releaseDateM" class="form-label"><%= FRONTEND.FILM_FORM_LIBELLE.RELEASE_DATE %></label>
           <input type="date" class="form-control" id="releaseDateM" name="releaseDateM" value="<%= films.filmToModify.releaseDate %>" />
         </div>
         <div class="mb-3 col-8">
-          <label for="descriptionM" class="form-label">Pitch du film</label>
+          <label for="descriptionM" class="form-label"><%= FRONTEND.FILM_FORM_LIBELLE.DESCRIPTION %></label>
           <textarea type="text" class="form-control" id="descriptionM" name="descriptionM" rows="3"><%= films.filmToModify.description %></textarea>
         </div>
         <div class="col-12 row ">
-          <button type="submit" class="btn btn-primary col-5 ms-3" onclick="window.location.href='/administration/films/:id'">Modifier le film</button>
-          <button class="btn btn-danger col-5 ms-3" onclick="window.location.href='/administration'">Annuler</button>
+          <button type="submit" class="btn btn-primary col-5 ms-3" onclick="window.location.href='/administration/films/:id'"><%= FRONTEND.FILM_FORM_LIBELLE.UPDATE_ACTION_BUTTON %></button>
+          <button class="btn btn-danger col-5 ms-3" onclick="window.location.href='/administration'"><%= FRONTEND.FILM_FORM_LIBELLE.CANCEL_BUTTON %></button>
         </div>
       </form>
       <% } else { %>
-      <form method="post" action="/administration/films" class="row col-6">
+      <form method="post" action="<%= `/${VIEW_LIBELLE.ADMINISTRATION}/${VIEW_LIBELLE.FILMS}` %>" class="row col-6">
         <div class="mb-3 col-8">
           <label for="title" class="form-label">Titre</label>
           <input type="text" class="form-control" id="title" name="title" />
         </div>
         <div class="mb-3 col-8">
-          <label for="genres" class="form-label">Genre(s)</label>
+          <label for="genres" class="form-label"><%= FRONTEND.FILM_FORM_LIBELLE.GENRE_SELECTION %></label>
           <select class="form-select" id="genres" name="genres[]" multiple>
             <% genres.list.forEach(genre=> { %>
             <option value="<%= genre.id %>">
@@ -77,21 +76,20 @@
           </select>
         </div>
         <div class="mb-3 col-8">
-          <label for="poster" class="form-label">Affiche</label>
+          <label for="poster" class="form-label"><%= FRONTEND.FILM_FORM_LIBELLE.POSTER %></label>
           <input type="text" class="form-control" id="poster" name="poster" />
-          <div id="posterHelp" class="form-text">Entrez une url finissant par un format d'image valide (jpg,
-            jpeg...)</div>
+          <div id="posterHelp" class="form-text"><%= FRONTEND.FILM_FORM_LIBELLE.POSTER_HELPER %></div>
         </div>
         <div class="mb-3 col-8">
-          <label for="releaseDate" class="form-label">Date de sortie au cinéma</label>
+          <label for="releaseDate" class="form-label"><%= FRONTEND.FILM_FORM_LIBELLE.RELEASE_DATE %></label>
           <input type="date" class="form-control" id="releaseDate" name="releaseDate" />
         </div>
         <div class="mb-3 col-8">
-          <label for="description" class="form-label">Pitch du film</label>
+          <label for="description" class="form-label"><%= FRONTEND.FILM_FORM_LIBELLE.DESCRIPTION %></label>
           <textarea type="text" class="form-control" id="description" name="description" rows="3"></textarea>
         </div>
         <div>
-          <button type="submit" class="btn btn-primary w-50">Ajouter un film</button>
+          <button type="submit" class="btn btn-primary w-50"><%= FRONTEND.FILM_FORM_LIBELLE.ADD_ACTION_BUTTON %></button>
         </div>
       </form>
       <% } %>

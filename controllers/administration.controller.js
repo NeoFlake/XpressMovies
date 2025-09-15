@@ -3,6 +3,8 @@ import FilmsRepository from "../repositories/films.repository.js";
 import DateService from "../services/date.service.js";
 import ValidationService from "../services/validation.service.js";
 import usersRepository from "../repositories/users.repository.js";
+import { FRONTEND } from "../constantes/administration.js";
+import { VIEW_LIBELLE } from "../constantes/views.js";
 
 const displayAdminPage = async (req, res) => {
     try {
@@ -59,6 +61,8 @@ const displayAdminPage = async (req, res) => {
                 },
                 navbar: navbar,
                 card: card,
+                FRONTEND: FRONTEND,
+                VIEW_LIBELLE: VIEW_LIBELLE,
                 error: { genreError: req.flash("genreError"), filmError: req.flash("filmError") }
             });
         } else if (displayModifyFilmForm) {
@@ -80,6 +84,8 @@ const displayAdminPage = async (req, res) => {
                 },
                 navbar: navbar,
                 card: card,
+                FRONTEND: FRONTEND,
+                VIEW_LIBELLE: VIEW_LIBELLE,
                 error: { genreError: req.flash("genreError"), filmError: req.flash("filmError") }
             });
         } else {
@@ -99,13 +105,21 @@ const displayAdminPage = async (req, res) => {
                 },
                 navbar: navbar,
                 card: card,
+                FRONTEND: FRONTEND,
+                VIEW_LIBELLE: VIEW_LIBELLE,
                 error: { genreError: req.flash("genreError"), filmError: req.flash("filmError") }
             });
         }
     } catch (error) {
         res.render("administration", {
             user: null, films: null,
-            genres: { list: [] }, films: { list: [] }, navbar: navbar, card: null, error: { genreError: error.message }
+            genres: { list: [] }, 
+            films: { list: [] }, 
+            navbar: navbar, 
+            card: null, 
+            FRONTEND: FRONTEND, 
+            VIEW_LIBELLE: VIEW_LIBELLE,
+            error: { genreError: error.message }
         });
     }
 }
