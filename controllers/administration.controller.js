@@ -24,17 +24,29 @@ const displayAdminPage = async (req, res) => {
         const idFilmToModify = flashIdFilmToModify.length > 0 ? flashIdFilmToModify[0] : 0;
         const displayModifyFilmForm = flashDisplayModifyFilmForm.length > 0 ? flashDisplayModifyFilmForm[0] : false;
 
+        const isAdmin = req.session.userLogged.role === "ADMIN" ? true : false;
+
         const navbar = {
-                    isAdmin: req.session.userLogged.role === "ADMIN" ? true : false,
-                    favoris: user.favoris.filter(f => f !== null).length,
-                    currentRoute: req.baseUrl,
-                    lastname: user.lastname,
-                    firstname: user.firstname
-                };
+            isAdmin: isAdmin,
+            favoris: user.favoris.filter(f => f !== null).length,
+            currentRoute: req.baseUrl,
+            lastname: user.lastname,
+            firstname: user.firstname
+        };
+
+        const card = {
+            user: user,
+            films: films,
+            isAdmin: isAdmin,
+            currentRoute: req.baseUrl
+        };
 
         if (displayModifyGenreForm) {
             const genreToModify = await GenresRepository.findById(idGenreToModify);
+
             res.render("administration", {
+                user: user,
+                films: films,
                 genres: {
                     list: genres,
                     displayModifyGenreForm: displayModifyGenreForm,
@@ -46,6 +58,7 @@ const displayAdminPage = async (req, res) => {
                     filmToModify: null
                 },
                 navbar: navbar,
+                card: card,
                 error: { genreError: req.flash("genreError"), filmError: req.flash("filmError") }
             });
         } else if (displayModifyFilmForm) {
@@ -53,6 +66,8 @@ const displayAdminPage = async (req, res) => {
             const filmToModify = await FilmsRepository.findById(idFilmToModify);
 
             res.render("administration", {
+                user: user,
+                films: films,
                 genres: {
                     list: genres,
                     displayModifyGenreForm: displayModifyGenreForm,
@@ -64,10 +79,14 @@ const displayAdminPage = async (req, res) => {
                     filmToModify: filmToModify
                 },
                 navbar: navbar,
+                card: card,
                 error: { genreError: req.flash("genreError"), filmError: req.flash("filmError") }
             });
         } else {
+
             res.render("administration", {
+                user: user,
+                films: films,
                 genres: {
                     list: genres,
                     displayModifyGenreForm: displayModifyGenreForm,
@@ -79,12 +98,14 @@ const displayAdminPage = async (req, res) => {
                     filmToModify: null
                 },
                 navbar: navbar,
+                card: card,
                 error: { genreError: req.flash("genreError"), filmError: req.flash("filmError") }
             });
         }
     } catch (error) {
         res.render("administration", {
-            genres: { list: [] }, films: { list: [] }, navbar: navbar, error: { genreError: error.message }
+            user: null, films: null,
+            genres: { list: [] }, films: { list: [] }, navbar: navbar, card: null, error: { genreError: error.message }
         });
     }
 }

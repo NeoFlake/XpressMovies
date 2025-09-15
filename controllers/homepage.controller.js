@@ -21,18 +21,27 @@ const displayView = async (req, res) => {
         }
         films = DateService.formatterDateFilm(films);
         const isAdmin = req.session.userLogged.role === "ADMIN" ? true : false;
-        res.render("homepage", { 
-            user: user, 
-            films: films, 
-            error: "", 
-            isAdmin: isAdmin, 
+
+        const card = {
+            user: user,
+            films: films,
+            isAdmin: isAdmin,
+            currentRoute: req.baseUrl
+        };
+
+        res.render("homepage", {
+            user: user,
+            films: films,
+            error: "",
+            isAdmin: isAdmin,
             navbar: {
                 isAdmin: isAdmin,
-                favoris: user.favoris.filter(f => f !== null).length, 
+                favoris: user.favoris.filter(f => f !== null).length,
                 currentRoute: req.baseUrl,
                 lastname: user.lastname,
                 firstname: user.firstname
-            }
+            },
+            card: card
         });
     } catch (error) {
         res.render("homepage", { films: [], error: error.message });

@@ -1,0 +1,39 @@
+.yellowstar {
+    color: gold;
+}
+
+.resume-text {
+    --lines: 3;
+    display: -webkit-box !important;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: var(--lines);
+    line-clamp: var(--lines);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    line-height: 1.2em;
+    max-height: calc(1.2em * var(--lines));
+}
+
+.resume-text.full-text {
+    -webkit-line-clamp: unset;
+    line-clamp: unset;
+    max-height: none;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.card-img-top {
+    height: 300px;
+    width: 100%;
+    object-fit: contain;
+    background-color: #2A2A2A;
+    transition: transform 0.5s ease;
+    cursor: pointer;
+}
+
+.card-img-top:hover {
+    transform: scale(1.05);
+}

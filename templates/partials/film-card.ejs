@@ -1,0 +1,50 @@
+<link rel="stylesheet" href="../css/film-card.css" />
+<script defer src="../js/expand-film-resume.js"></script>
+
+<%- include('full-poster-modal') %>
+<div class="row mt-5">
+  <% card.films.forEach(film=> { %>
+  <div class="card col-3 mt-1">
+    <img src="<%= film.poster %>" class="card-img-top" alt="une belle affiche" />
+    <div class="card-body">
+      <h5 class="card-title">
+        <%= film.title %>
+      </h5>
+      <% film.genres.forEach(genre=> { %>
+      <span class="badge bg-primary text-bg-primary mb-2">
+        <%= genre %>
+      </span>
+      <% }) %>
+      <p class="card-text">Sorti au cinéma le <%= film.releaseDate %>
+      </p>
+      <p id="description-film-<%= film.id %>" class="card-text resume-text mb-3 cursor-pointer">
+        <%= film.description %>
+      </p>
+      <div class="d-flex justify-content-end">
+        <% switch(card.currentRoute) {
+   case "/homepage":
+     if (card.isAdmin) { %>
+        <button onclick="window.location.href='/administration/films/modify/<%= film.id %>'" class="btn btn-primary me-2">Modifier</button>
+        <% } else {
+       if ((card.user.favoris.filter(f => f !== null).length > 0 && card.user.favoris.some(favori => favori.id === film.id))) { %>
+        <i class="fa-solid fa-star yellowstar"></i>
+        <% } else { %>
+        <i class="fa-regular fa-star cursor-pointer" onclick="window.location.href='/homepage/favori/<%= film.id %>'"></i>
+        <% }
+     }
+     break;
+
+   case "/administration": %>
+        <button onclick="window.location.href='/administration/films/modify/<%= film.id %>'" class="btn btn-primary me-2">Modifier</button>
+        <button onclick="window.location.href='/administration/films/<%= film.id %>'" class="btn btn-danger">Supprimer</button>
+        <% break;
+
+   case "/favoris": %>
+        <i class="fa-solid fa-star yellowstar cursor-pointer" data-bs-toggle="modal" data-bs-target="#suppression-modale" data-bs-film-title="<%= film.title%>" data-bs-id="<%= film.id %>"></i>
+        <% break;
+ } %>
+      </div>
+    </div>
+  </div>
+  <% }) %>
+</div>

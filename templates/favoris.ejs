@@ -2,53 +2,24 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Favoris</title>
-    <%- include('partials/header') %>
-    <link rel="stylesheet" href="../css/favoris.css" />
-    <script defer src="../js/expand-film-resume.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Favoris</title>
+  <%- include('partials/header') %>
+  <link rel="stylesheet" href="../css/favoris.css" />
 </head>
 
 <body>
-    <div class="container">
-        <%- include('partials/navbar') %>
-        <div class="row d-flex justify-content-center mt-5">
-            <h1 class="col-3">Liste de Favoris</h1>
-        </div>
-        <%- include('partials/suppress-modal') %>
-            <% if(films.length> 0) { %>
-                <div class="row mt-5  d-flex justify-content-center">
-                    <% films.forEach(film=> { %>
-                        <div class="card col-3 mt-1">
-                            <img src="<%= film.poster %>" class="card-img-top" alt="une belle affiche">
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    <%= film.title %>
-                                </h5>
-                                <% film.genres.forEach(genre=> { %>
-                                    <span class="badge text-bg-primary mb-2">
-                                        <%= genre %>
-                                    </span>
-                                    <% }); %>
-                                        <p class="card-text">Sorti au cinéma le <%= film.releaseDate %>
-                                        </p>
-                                        <p id="description-film-<%= film.id %>"
-                                            class="card-text resume-text mb-3 cursor-pointer">
-                                            <%= film.description %>
-                                        </p>
-                                        <div class="d-flex justify-content-end">
-                                            <i class="fa-solid fa-star yellowstar cursor-pointer" data-bs-toggle="modal"
-                                                data-bs-target="#suppression-modale"
-                                                data-bs-film-title="<%= film.title%>"
-                                                data-bs-id="<%= film.id %>"></i>
-                                        </div>
-                            </div>
-                        </div>
-                        <% }) %>
-                </div>
-                <% } %>
+  <div class="container">
+    <%- include('partials/navbar') %>
+    <div class="row d-flex justify-content-center mt-5">
+      <h1 class="col-3">Liste de Favoris</h1>
     </div>
+    <%- include('partials/suppress-modal') %>
+    <% if(films.length> 0) { %>
+    <%- include('partials/film-card.ejs') %>
+    <% } %>
+  </div>
 </body>
 
 </html>

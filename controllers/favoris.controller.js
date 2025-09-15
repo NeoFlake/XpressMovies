@@ -5,27 +5,38 @@ import DateService from "../services/date.service.js";
 const displayView = async (req, res) => {
     try {
         const user = await UsersRepository.findById(req.session.userLogged.id);
-        
+
         if (user.favoris.filter(f => f !== null).length > 0) {
             const films = DateService.formatterDateFilm(user.favoris);
-            
+
+            const isAdmin = req.session.userLogged.role === "ADMIN" ? true : false;
+
+            const card = {
+                user: user,
+                films: films,
+                isAdmin: isAdmin,
+                currentRoute: req.baseUrl
+            };
+
+            const navbar = {
+                isAdmin: isAdmin,
+                favoris: user.favoris.filter(f => f !== null).length,
+                currentRoute: req.baseUrl,
+                lastname: user.lastname,
+                firstname: user.firstname
+            };
+
             res.render("favoris", {
                 films: films,
-                navbar: {
-                    isAdmin: req.session.userLogged.role === "ADMIN" ? true : false,
-                    favoris: user.favoris.filter(f => f !== null).length,
-                    currentRoute: req.baseUrl,
-                    lastname: user.lastname,
-                    firstname: user.firstname
-                }
+                navbar: navbar,
+                card: card
             });
+
         } else {
-            console.log("Je rentre ici et ce n'est pas normal");
-            
             res.redirect("/homepage");
         }
     } catch (error) {
-        console.log("Je rentre ici et c'est encore moins normal", error.message);
+        console.log(error.message);
         
         res.redirect("/homepage");
     }
