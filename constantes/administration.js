@@ -12,4 +12,11 @@ export const FRONTEND = {
     ADD_ACTION_BUTTON: "Ajouter un film",
     CANCEL_BUTTON: "Annuler"
   },
+  GENRE_FORM_LIBELLE: {
+    FORM_TITLE: "Gestion des Genres de film",
+    DELETE_BUTTON_LIBELLE: "Supprimer",
+    UPDATE_BUTTON_LIBELLE: "Modifier",
+    UPDATE_ACTION_LIBELLE: "Modifier le genre",
+    ADD_BUTTON_LIBELLE: "Ajouter un genre"
+  }
 };

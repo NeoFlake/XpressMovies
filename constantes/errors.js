@@ -1,3 +1,22 @@
 export const ERROR_LIBELLE = {
-    NEW_FAVORI_ERROR: "Votre favori n'a pas pu être ajouté"
+    GENRE_TITLE_ALREADY_EXIST: "Cet intitulé de genre de film existe déjà",
+    FILM_TITLE_ALREADY_EXIST: "Ce titre de film existe déjà",
+    EMAIL_ALDREADY_EXIST: "Vous ne pouvez pas utiliser cet email",
+    NEW_FAVORI_ERROR: "Votre favori n'a pas pu être ajouté",
+    ADD_GENRE_DB_ERROR: "L'intitulé de ce genre de film n'a pas pu être poussé en base",
+    ADD_FILM_DB_ERROR: "Votre film n'a pas pu être poussé en base",
+    REMOVE_GENRE_FAIL: "Échec lors de la suppression du genre",
+    REMOVE_FILM_FAIL: "Votre film n'a pas pu être supprimé",
+    REMOVE_FAVORI_FAIL: "Le retrait de la liste des favoris n'a pu s'effectuer",
+    REMOVE_PROFILE_FAIL: "La suppression de votre compte n'a pas pu se faire; veuillez réessayer",
+    UPDATE_FILM_FAIL: "Le film n'a pas pu être mis à jour",
+    UPDATE_PROFILE_FAIL: "Échec lors de la sauvegarde de votre mise à jour",
+    UPDATE_PROFILE_DB_ERROR: "Échec lors de la sauvegarde de votre mise à jour",
+    UPDATE_PASSWORD_FAIL: "Votre nouveau mot de passe n'est pas confirmé",
+    TECHNICAL_ERROR_ON_SUBMISSION: "Erreur technique lors de la soumission du formulaire",
+    EMAIL_ALREADY_EXIST: "Veuillez changer d'email",
+    AUTHENTIFICATION_FAIL: "Vos identifiants sont incorrects",
+    BAD_PASSWORD: "Mot de passe incorrect",
+    TECHNICAL_ERROR_WHEN_PROFILE_MODIFICATION: "Erreur technique lors de la tentative de modification de votre compte; contactez le service de maintenance"
 };
+

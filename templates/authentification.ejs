@@ -21,39 +21,39 @@
         <% if(form === "inscription") { %>
         <form method="post" class="row">
           <div class="mb-3">
-            <label for="lastnameI" class="form-label">Nom</label>
+            <label for="lastnameI" class="form-label"><%= AUTHENTIFICATION_LIBELLE.LASTNAME %></label>
             <input type="text" class="form-control" id="lastnameI" name="lastnameI" />
           </div>
           <div class="mb-3">
-            <label for="firstnameI" class="form-label">Prénom</label>
+            <label for="firstnameI" class="form-label"><%= AUTHENTIFICATION_LIBELLE.FIRSTNAME %></label>
             <input type="text" class="form-control" id="firstnameI" name="firstnameI" />
           </div>
           <div class="mb-3">
-            <label for="emailI" class="form-label">Email</label>
+            <label for="emailI" class="form-label"><%= AUTHENTIFICATION_LIBELLE.EMAIL %></label>
             <input type="email" class="form-control" id="emailI" name="emailI" />
           </div>
           <div class="mb-3">
-            <label for="passwordI" class="form-label">Mot de passe</label>
+            <label for="passwordI" class="form-label"><%= AUTHENTIFICATION_LIBELLE.PASSWORD %></label>
             <input type="password" class="form-control" id="passwordI" name="passwordI" />
-            <div id="emailHelp" class="form-text">Doit contenir une majuscule, un chiffre, un caractère spécial et faire minimum dix caractères de long</div>
+            <div id="emailHelp" class="form-text"><%= AUTHENTIFICATION_LIBELLE.PASSWORD_HELPER %></div>
           </div>
           <div class="text-center mt-3">
-            <button type="submit" class="btn btn-primary w-50">Inscription</button>
+            <button type="submit" class="btn btn-primary w-50"><%= AUTHENTIFICATION_LIBELLE.INSCRIPTION_ACTION_BUTTON %></button>
           </div>
         </form>
         <% } %>
         <% if(form === "login") { %>
         <form method="post" class="row">
           <div class="mb-3">
-            <label for="emailC" class="form-label">Email</label>
+            <label for="emailC" class="form-label"><%= AUTHENTIFICATION_LIBELLE.EMAIL %></label>
             <input type="email" class="form-control" id="emailC" name="emailC" />
           </div>
           <div class="mb-3">
-            <label for="passwordC" class="form-label">Mot de passe</label>
+            <label for="passwordC" class="form-label"><%= AUTHENTIFICATION_LIBELLE.PASSWORD %></label>
             <input type="password" class="form-control" id="passwordC" name="passwordC" />
           </div>
           <div class="text-center mt-3">
-            <button type="submit" class="btn btn-primary w-50">Connexion</button>
+            <button type="submit" class="btn btn-primary w-50"><%= AUTHENTIFICATION_LIBELLE.CONNEXION_ACTION_BUTTON %></button>
           </div>
         </form>
         <% } %>

@@ -1,6 +1,9 @@
 import FavorisRepository from "../repositories/favoris.repository.js";
 import UsersRepository from "../repositories/users.repository.js";
 import DateService from "../services/date.service.js";
+import { FAVORI_LIBELLE, ROLE_LIBELLE } from "../constantes/views.js";
+import { VIEW_LIBELLE } from "../constantes/views.js";
+import { ERROR_LIBELLE } from "../constantes/errors.js";
 
 const displayView = async (req, res) => {
     try {
@@ -9,7 +12,7 @@ const displayView = async (req, res) => {
         if (user.favoris.filter(f => f !== null).length > 0) {
             const films = DateService.formatterDateFilm(user.favoris);
 
-            const isAdmin = req.session.userLogged.role === "ADMIN" ? true : false;
+            const isAdmin = req.session.userLogged.role === ROLE_LIBELLE.ADMIN ? true : false;
 
             const card = {
                 user: user,
@@ -26,32 +29,31 @@ const displayView = async (req, res) => {
                 firstname: user.firstname
             };
 
-            res.render("favoris", {
+            res.render(VIEW_LIBELLE.FAVORIS, {
                 films: films,
                 navbar: navbar,
-                card: card
+                card: card,
+                FAVORI_LIBELLE: FAVORI_LIBELLE
             });
 
         } else {
-            res.redirect("/homepage");
+            res.redirect(`/${VIEW_LIBELLE.HOMEPAGE}`);
         }
     } catch (error) {
-        console.log(error.message);
-        
-        res.redirect("/homepage");
+        res.redirect(`/${VIEW_LIBELLE.HOMEPAGE}`);
     }
 }
 
 const remove = async (req, res) => {
     try {
-        const withdrawFavorite = FavorisRepository.removeByUserAndFilmId(req.session.userLogged.id, req.params.id);
+        const withdrawFavorite = await FavorisRepository.removeByUserAndFilmId(req.session.userLogged.id, req.params.id);
         if (withdrawFavorite > 0) {
-            res.redirect("/favoris");
+            res.redirect(`/${VIEW_LIBELLE.FAVORIS}`);
         } else {
-            throw new Error("Le retrait de la liste des favoris n'a pu s'effectuer");
+            throw new Error(ERROR_LIBELLE.REMOVE_FAVORI_FAIL);
         }
     } catch (error) {
-        res.redirect("/favoris");
+        res.redirect(`/${VIEW_LIBELLE.FAVORIS}`);
     }
 }
 

@@ -1,4 +1,5 @@
 export const VIEW_LIBELLE = {
+    AUTHENTIFICATION: "authentification",
     INSCRIPTION: "inscription",
     LOGIN: "login",
     HOMEPAGE: "homepage",
@@ -12,3 +13,7 @@ export const ROLE_LIBELLE = {
     ADMIN: "ADMIN",
     ABONNE: "ABONNE"
 };
+
+export const FAVORI_LIBELLE = {
+    TITLE: "Liste de Favoris"
+}

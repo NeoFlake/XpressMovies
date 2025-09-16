@@ -1,3 +1,7 @@
+import { ERROR_LIBELLE } from "../constantes/errors.js";
+import { ROLE_LIBELLE, VIEW_LIBELLE } from "../constantes/views.js";
+import { FRONT } from "../constantes/profile.js";
+import { AUTHENTIFICATION_LIBELLE } from "../constantes/authentification.js";
 import UserRepository from "../repositories/users.repository.js";
 import validationService from "../services/validation.service.js";
 import bcrypt from 'bcrypt';
@@ -7,18 +11,21 @@ const saltRounds = 10;
 const displayView = async (req, res) => {
     try {
         const user = await UserRepository.findById(req.session.userLogged.id);
-        res.render("profile", {
+        res.render(VIEW_LIBELLE.PROFILE, {
             user: user,
             navbar: {
-                isAdmin: req.session.userLogged.role === "ADMIN" ? true : false,
+                isAdmin: req.session.userLogged.role === ROLE_LIBELLE.ADMIN ? true : false,
                 favoris: user.favoris.filter(f => f !== null).length,
                 currentRoute: req.baseUrl,
                 lastname: user.lastname,
                 firstname: user.firstname
-            }
+            },
+            FRONT: FRONT,
+            AUTHENTIFICATION_LIBELLE: AUTHENTIFICATION_LIBELLE,
+            VIEW_LIBELLE: VIEW_LIBELLE
         });
     } catch (error) {
-        res.render("profile");
+        res.render(VIEW_LIBELLE.PROFILE, {FRONT: FRONT, AUTHENTIFICATION_LIBELLE: AUTHENTIFICATION_LIBELLE, VIEW_LIBELLE: VIEW_LIBELLE});
     }
 }
 
@@ -29,7 +36,7 @@ const update = async (req, res) => {
         const user = await UserRepository.findById(req.session.userLogged.id);
         if (req.params.id === req.body.id) {
             if (req.body.email !== user.email && emailAlreadyExist.length > 0) {
-                throw new Error("Vous ne pouvez pas utiliser cet email");
+                throw new Error(ERROR_LIBELLE.EMAIL_ALDREADY_EXIST);
             } else {
                 if (bcrypt.compareSync(req.body.password, user.password)) {
                     let updatedUser = {
@@ -45,34 +52,34 @@ const update = async (req, res) => {
                                     updatedUser.password = passwordHashed;
                                     const update = await UserRepository.updateById(req.body.id, updatedUser);
                                     if (update > 0) {
-                                        res.redirect("/profile");
+                                        res.redirect(`/${VIEW_LIBELLE.PROFILE}`);
                                     } else {
-                                        throw new Error("Échec lors de la sauvegarde de votre mise à jour");
+                                        throw new Error(ERROR_LIBELLE.UPDATE_PROFILE_FAIL);
                                     }
                                 } catch (error) {
-                                    res.redirect("/profile");
+                                    res.redirect(`/${VIEW_LIBELLE.PROFILE}`);
                                 }
                             });
                         } else {
-                            throw new Error("Votre nouveau mot de passe n'est pas confirmé");
+                            throw new Error(ERROR_LIBELLE.UPDATE_PASSWORD_FAIL);
                         }
                     } else {
                         const update = await UserRepository.updateById(req.body.id, updatedUser);
                         if (update > 0) {
-                            res.redirect("/profile");
+                            res.redirect(`/${VIEW_LIBELLE.PROFILE}`);
                         } else {
-                            throw new Error("Échec lors de la sauvegarde de votre mise à jour");
+                            throw new Error(ERROR_LIBELLE.UPDATE_PROFILE_DB_ERROR);
                         }
                     }
                 } else {
-                    throw new Error("Mot de passe incorrect");
+                    throw new Error(ERROR_LIBELLE.BAD_PASSWORD);
                 }
             }
         } else {
-            throw new Error("Erreur technique lors de la tentative de modification de votre compte; contactez le service de maintenance");
+            throw new Error(ERROR_LIBELLE.TECHNICAL_ERROR_WHEN_PROFILE_MODIFICATION);
         }
     } catch (error) {
-        res.redirect("/profile");
+        res.redirect(`/${VIEW_LIBELLE.PROFILE}`);
     }
 }
 
@@ -81,12 +88,12 @@ const remove = async (req, res) => {
         const remove = await UserRepository.deleteById(req.params.id);
         if (remove > 0) {
             delete req.session.userLogged;
-            res.redirect("/authentification/login");
+            res.redirect(`/${VIEW_LIBELLE.AUTHENTIFICATION}${VIEW_LIBELLE.LOGIN}`);
         } else {
-            throw new Error("La suppression de votre compte n'a pas pu se faire; veuillez réessayer");
+            throw new Error(ERROR_LIBELLE.REMOVE_PROFILE_FAIL);
         }
     } catch (error) {
-        res.redirect("/profile");
+        res.redirect(`/${VIEW_LIBELLE.PROFILE}`);
     }
 }
 

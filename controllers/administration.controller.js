@@ -4,7 +4,8 @@ import DateService from "../services/date.service.js";
 import ValidationService from "../services/validation.service.js";
 import usersRepository from "../repositories/users.repository.js";
 import { FRONTEND } from "../constantes/administration.js";
-import { VIEW_LIBELLE } from "../constantes/views.js";
+import { VIEW_LIBELLE, ROLE_LIBELLE } from "../constantes/views.js";
+import { ERROR_LIBELLE } from "../constantes/errors.js";
 
 const displayAdminPage = async (req, res) => {
     try {
@@ -26,7 +27,7 @@ const displayAdminPage = async (req, res) => {
         const idFilmToModify = flashIdFilmToModify.length > 0 ? flashIdFilmToModify[0] : 0;
         const displayModifyFilmForm = flashDisplayModifyFilmForm.length > 0 ? flashDisplayModifyFilmForm[0] : false;
 
-        const isAdmin = req.session.userLogged.role === "ADMIN" ? true : false;
+        const isAdmin = req.session.userLogged.role === ROLE_LIBELLE.ADMIN ? true : false;
 
         const navbar = {
             isAdmin: isAdmin,
@@ -46,7 +47,7 @@ const displayAdminPage = async (req, res) => {
         if (displayModifyGenreForm) {
             const genreToModify = await GenresRepository.findById(idGenreToModify);
 
-            res.render("administration", {
+            res.render(VIEW_LIBELLE.ADMINISTRATION, {
                 user: user,
                 films: films,
                 genres: {
@@ -69,7 +70,7 @@ const displayAdminPage = async (req, res) => {
 
             const filmToModify = await FilmsRepository.findById(idFilmToModify);
 
-            res.render("administration", {
+            res.render(VIEW_LIBELLE.ADMINISTRATION, {
                 user: user,
                 films: films,
                 genres: {
@@ -90,7 +91,7 @@ const displayAdminPage = async (req, res) => {
             });
         } else {
 
-            res.render("administration", {
+            res.render(VIEW_LIBELLE.ADMINISTRATION, {
                 user: user,
                 films: films,
                 genres: {
@@ -111,7 +112,7 @@ const displayAdminPage = async (req, res) => {
             });
         }
     } catch (error) {
-        res.render("administration", {
+        res.render(VIEW_LIBELLE.ADMINISTRATION, {
             user: null, films: null,
             genres: { list: [] }, 
             films: { list: [] }, 
@@ -129,25 +130,25 @@ const addGenre = async (req, res) => {
         await ValidationService.genreSchema.validate(req.body);
         const nameKnown = await GenresRepository.nameAlreadyKnown(req.body.name);
         if (nameKnown) {
-            throw new Error("Cet intitulé de genre de film existe déjà");
+            throw new Error(ERROR_LIBELLE.GENRE_TITLE_ALREADY_EXIST);
         } else {
             const add = await GenresRepository.add(req.body.name);
             if (add > 0) {
-                res.redirect("/administration");
+                res.redirect(`/${VIEW_LIBELLE.ADMINISTRATION}`);
             } else {
-                throw new Error("L'intitulé de ce genre de film n'a pas pu être poussé en base");
+                throw new Error(ERROR_LIBELLE.ADD_GENRE_DB_ERROR);
             }
         }
     } catch (error) {
         req.flash("genreError", error.message);
-        res.redirect("/administration");
+        res.redirect(`/${VIEW_LIBELLE.ADMINISTRATION}`);
     }
 }
 
 const displayModifierGenreForm = (req, res) => {
     req.flash("displayModifyGenreForm", true);
     req.flash("idGenreToModify", req.params.id);
-    res.redirect("/administration");
+    res.redirect(`/${VIEW_LIBELLE.ADMINISTRATION}`);
 }
 
 const modifierGenre = async (req, res) => {
@@ -157,21 +158,21 @@ const modifierGenre = async (req, res) => {
             const nameKnown = await GenresRepository.nameAlreadyKnown(req.body.nameM);
             const genreOnBase = await GenresRepository.findById(req.body.id);
             if (genreOnBase.name !== req.body.nameM && nameKnown) {
-                throw new Error("Cet intitulé de genre de film existe déjà");
+                throw new Error(ERROR_LIBELLE.FILM_TITLE_ALREADY_EXIST);
             } else {
                 const update = await GenresRepository.updateById(req.params.id, { id: req.body.id, name: req.body.nameM });
                 if (update) {
-                    res.redirect("/administration");
+                    res.redirect(`/${VIEW_LIBELLE.ADMINISTRATION}`);
                 } else {
-                    throw new Error("L'intitulé de ce genre de film n'a pas pu être poussé en base");
+                    throw new Error(ERROR_LIBELLE.ADD_GENRE_DB_ERROR);
                 }
             }
         } else {
-            throw new Error("Erreur technique lors de la soumission du formulaire");
+            throw new Error(ERROR_LIBELLE.TECHNICAL_ERROR_ON_SUBMISSION);
         }
     } catch (error) {
         req.flash("genreError", error.message);
-        res.redirect("/administration");
+        res.redirect(`/${VIEW_LIBELLE.ADMINISTRATION}`);
     }
 }
 
@@ -179,13 +180,13 @@ const supprimerGenre = async (req, res) => {
     try {
         const deleted = await genresRepository.deleteById(req.params.id);
         if (deleted) {
-            res.redirect("/administration");
+            res.redirect(`/${VIEW_LIBELLE.ADMINISTRATION}`);
         } else {
-            throw new Error("Le genre que vous avez souhaité supprimé n'a pas pu être supprimé");
+            throw new Error(ERROR_LIBELLE.REMOVE_GENRE_FAIL);
         }
     } catch (error) {
         req.flash("genreError", error.message);
-        res.redirect("/administration");
+        res.redirect(`/${VIEW_LIBELLE.ADMINISTRATION}`);
     }
 }
 
@@ -195,7 +196,7 @@ const addFilm = async (req, res) => {
         await ValidationService.filmSchema.validate(req.body);
         const titleKnown = await FilmsRepository.existByTitle(req.body.title);
         if (titleKnown) {
-            throw new Error("Ce titre de film existe déjà");
+            throw new Error(ERROR_LIBELLE.FILM_TITLE_ALREADY_EXIST);
         } else {
             const filmToAdd = {
                 title: req.body.title,
@@ -207,14 +208,14 @@ const addFilm = async (req, res) => {
             }
             const add = await FilmsRepository.add(filmToAdd);
             if (add) {
-                res.redirect("/administration");
+                res.redirect(`/${VIEW_LIBELLE.ADMINISTRATION}`);
             } else {
-                throw new Error("L'intitulé de ce genre de film n'a pas pu être poussé en base");
+                throw new Error(ERROR_LIBELLE.ADD_FILM_DB_ERROR);
             }
         }
     } catch (error) {
         req.flash("filmError", error.message);
-        res.redirect("/administration");
+        res.redirect(`/${VIEW_LIBELLE.ADMINISTRATION}`);
     }
 }
 
@@ -223,20 +224,20 @@ const supprimerFilm = async (req, res) => {
 
         const deleted = await FilmsRepository.deleteById(req.params.id);
         if (deleted) {
-            res.redirect("/administration");
+            res.redirect(`/${VIEW_LIBELLE.ADMINISTRATION}`);
         } else {
-            throw new Error("Le film que vous avez souhaité supprimé n'a pas pu être supprimé");
+            throw new Error(ERROR_LIBELLE.REMOVE_FILM_FAIL);
         }
     } catch (error) {
         req.flash("filmError", error.message);
-        res.redirect("/administration");
+        res.redirect(`/${VIEW_LIBELLE.ADMINISTRATION}`);
     }
 }
 
 const displayModifierFilmForm = (req, res) => {
     req.flash("displayModifierFilmForm", true);
     req.flash("idFilmToModify", req.params.id);
-    res.redirect("/administration");
+    res.redirect(`/${VIEW_LIBELLE.ADMINISTRATION}`);
 }
 
 const modifierFilm = async (req, res) => {
@@ -246,7 +247,7 @@ const modifierFilm = async (req, res) => {
             const titleKnown = await FilmsRepository.existByTitle(req.body.titleM);
             const filmOnBase = await FilmsRepository.findById(req.body.id);
             if (filmOnBase.title !== req.body.titleM && titleKnown) {
-                throw new Error("Cet intitulé de film existe déjà");
+                throw new Error(ERROR_LIBELLE.FILM_TITLE_ALREADY_EXIST);
             } else {
                 const update = await FilmsRepository.updateById(req.params.id, {
                     id: req.body.id,
@@ -259,17 +260,17 @@ const modifierFilm = async (req, res) => {
                     adminId: req.session.userLogged.id
                 });
                 if (update) {
-                    res.redirect("/administration");
+                    res.redirect(`/${VIEW_LIBELLE.ADMINISTRATION}`);
                 } else {
-                    throw new Error("Le film n'a pas pu être mis à jour");
+                    throw new Error(ERROR_LIBELLE.UPDATE_FILM_FAIL);
                 }
             }
         } else {
-            throw new Error("Erreur technique lors de la soumission du formulaire");
+            throw new Error(ERROR_LIBELLE.TECHNICAL_ERROR_ON_SUBMISSION);
         }
     } catch (error) {
         req.flash("filmError", error.message);
-        res.redirect("/administration");
+        res.redirect(`/${VIEW_LIBELLE.ADMINISTRATION}`);
     }
 }
 
