@@ -1,83 +1,29 @@
 import { ERROR_LIBELLE } from "../constantes/errors.js";
-import { ROLE_LIBELLE, VIEW_LIBELLE } from "../constantes/views.js";
+import { VIEW_LIBELLE } from "../constantes/views.js";
 import { FRONT } from "../constantes/profile.js";
 import { AUTHENTIFICATION_LIBELLE } from "../constantes/authentification.js";
 import UserRepository from "../repositories/users.repository.js";
 import validationService from "../services/validation.service.js";
 import bcrypt from 'bcrypt';
-
-const saltRounds = 10;
+import ProfileService from "../services/profile.service.js";
 
 const displayView = async (req, res) => {
     try {
-        const user = await UserRepository.findById(req.session.userLogged.id);
+        const profile = await ProfileService.displayView(req);
+        res.render(VIEW_LIBELLE.PROFILE, profile);
+    } catch (error) {
         res.render(VIEW_LIBELLE.PROFILE, {
-            user: user,
-            navbar: {
-                isAdmin: req.session.userLogged.role === ROLE_LIBELLE.ADMIN ? true : false,
-                favoris: user.favoris.filter(f => f !== null).length,
-                currentRoute: req.baseUrl,
-                lastname: user.lastname,
-                firstname: user.firstname
-            },
-            FRONT: FRONT,
-            AUTHENTIFICATION_LIBELLE: AUTHENTIFICATION_LIBELLE,
+            FRONT: FRONT, 
+            AUTHENTIFICATION_LIBELLE: AUTHENTIFICATION_LIBELLE, 
             VIEW_LIBELLE: VIEW_LIBELLE
         });
-    } catch (error) {
-        res.render(VIEW_LIBELLE.PROFILE, {FRONT: FRONT, AUTHENTIFICATION_LIBELLE: AUTHENTIFICATION_LIBELLE, VIEW_LIBELLE: VIEW_LIBELLE});
     }
 }
 
 const update = async (req, res) => {
     try {
-        await validationService.updateProfileSchema.validate(req.body);
-        const emailAlreadyExist = await UserRepository.findByEmail(req.body.email);
-        const user = await UserRepository.findById(req.session.userLogged.id);
-        if (req.params.id === req.body.id) {
-            if (req.body.email !== user.email && emailAlreadyExist.length > 0) {
-                throw new Error(ERROR_LIBELLE.EMAIL_ALDREADY_EXIST);
-            } else {
-                if (bcrypt.compareSync(req.body.password, user.password)) {
-                    let updatedUser = {
-                        lastname: req.body.lastname,
-                        firstname: req.body.firstname,
-                        email: req.body.email,
-                        password: user.password
-                    };
-                    if (req.body.newPassword.length > 0) {
-                        if (req.body.newPassword === req.body.confirmPassword) {
-                            bcrypt.hash(req.body.newPassword, saltRounds, async function (err, passwordHashed) {
-                                try {
-                                    updatedUser.password = passwordHashed;
-                                    const update = await UserRepository.updateById(req.body.id, updatedUser);
-                                    if (update > 0) {
-                                        res.redirect(`/${VIEW_LIBELLE.PROFILE}`);
-                                    } else {
-                                        throw new Error(ERROR_LIBELLE.UPDATE_PROFILE_FAIL);
-                                    }
-                                } catch (error) {
-                                    res.redirect(`/${VIEW_LIBELLE.PROFILE}`);
-                                }
-                            });
-                        } else {
-                            throw new Error(ERROR_LIBELLE.UPDATE_PASSWORD_FAIL);
-                        }
-                    } else {
-                        const update = await UserRepository.updateById(req.body.id, updatedUser);
-                        if (update > 0) {
-                            res.redirect(`/${VIEW_LIBELLE.PROFILE}`);
-                        } else {
-                            throw new Error(ERROR_LIBELLE.UPDATE_PROFILE_DB_ERROR);
-                        }
-                    }
-                } else {
-                    throw new Error(ERROR_LIBELLE.BAD_PASSWORD);
-                }
-            }
-        } else {
-            throw new Error(ERROR_LIBELLE.TECHNICAL_ERROR_WHEN_PROFILE_MODIFICATION);
-        }
+        await ProfileService.update(req);
+        res.redirect(`/${VIEW_LIBELLE.PROFILE}`);
     } catch (error) {
         res.redirect(`/${VIEW_LIBELLE.PROFILE}`);
     }
@@ -85,13 +31,8 @@ const update = async (req, res) => {
 
 const remove = async (req, res) => {
     try {
-        const remove = await UserRepository.deleteById(req.params.id);
-        if (remove > 0) {
-            delete req.session.userLogged;
-            res.redirect(`/${VIEW_LIBELLE.AUTHENTIFICATION}${VIEW_LIBELLE.LOGIN}`);
-        } else {
-            throw new Error(ERROR_LIBELLE.REMOVE_PROFILE_FAIL);
-        }
+        await ProfileService.remove(req);
+        res.redirect(`/${VIEW_LIBELLE.AUTHENTIFICATION}${VIEW_LIBELLE.LOGIN}`);
     } catch (error) {
         res.redirect(`/${VIEW_LIBELLE.PROFILE}`);
     }

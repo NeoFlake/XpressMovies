@@ -19,6 +19,8 @@ export const ERROR_LIBELLE = {
     EMAIL_ALREADY_EXIST: "Veuillez changer d'email",
     AUTHENTIFICATION_FAIL: "Vos identifiants sont incorrects",
     BAD_PASSWORD: "Mot de passe incorrect",
-    TECHNICAL_ERROR_WHEN_PROFILE_MODIFICATION: "Erreur technique lors de la tentative de modification de votre compte; contactez le service de maintenance"
+    TECHNICAL_ERROR_WHEN_PROFILE_MODIFICATION: "Erreur technique lors de la tentative de modification de votre compte; contactez le service de maintenance",
+    NO_FAVORI_FOUND: "Aucun favori dans votre sélection",
+    PROFILE_DISPLAY_ERROR: "Votre profil n'a pas pu être chargé"
 };
 
