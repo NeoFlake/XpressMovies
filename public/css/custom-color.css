@@ -75,3 +75,8 @@ div,
   background-color: #FF7F50 !important; /* corail/orangé clair */
   color: #fff !important;
 }
+
+.navbar .nav-link.active.disabled {
+  color: grey !important;
+  font-weight: 400;
+}

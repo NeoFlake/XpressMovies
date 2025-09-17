@@ -7,8 +7,8 @@ const router = express.Router();
 router.use(RoleService.requireRole("ADMIN"));
 
 router
-    .get("/genres/modify/:id", AdministrationController.displayModifierGenreForm)
-    .get("/films/modify/:id", AdministrationController.displayModifierFilmForm)
+    .get("/genres/update/:id", AdministrationController.displayModifierGenreForm)
+    .get("/films/update/:id", AdministrationController.displayModifierFilmForm)
     .get("/", AdministrationController.displayAdminPage)
     .get("/genres/:id", AdministrationController.supprimerGenre)
     .get("/films/:id", AdministrationController.supprimerFilm)

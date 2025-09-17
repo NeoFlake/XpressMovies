@@ -117,8 +117,8 @@
             <i class="fa-solid fa-arrow-left"></i>
           </div>
           <div class="d-none action">
-            <button class="btn btn-alert btn-sm" onclick="window.location.href='/administration/genres/<%= genre.id %>'"><%= FRONTEND.GENRE_FORM_LIBELLE.DELETE_BUTTON_LIBELLE %></button>
-            <button class="btn btn-alert btn-sm" onclick="window.location.href='/administration/genres/modify/<%= genre.id %>'"><%= FRONTEND.GENRE_FORM_LIBELLE.UPDATE_BUTTON_LIBELLE %></button>
+            <button class="btn btn-alert btn-sm" onclick="window.location.href='<%= `/${VIEW_LIBELLE.ADMINISTRATION}/${VIEW_LIBELLE.GENRES}/${genre.id}` %>'"><%= FRONTEND.GENRE_FORM_LIBELLE.DELETE_BUTTON_LIBELLE %></button>
+            <button class="btn btn-alert btn-sm" onclick="window.location.href='<%= `/${VIEW_LIBELLE.ADMINISTRATION}/${VIEW_LIBELLE.GENRES}/${VIEW_LIBELLE.UPDATE}/${genre.id}` %>'"><%= FRONTEND.GENRE_FORM_LIBELLE.UPDATE_BUTTON_LIBELLE %></button>
           </div>
         </li>
         <% }); %>
@@ -127,18 +127,18 @@
     </div>
     <div class="row mt-3">
       <% if(genres.displayModifyGenreForm) { %>
-      <form method="post" action="/administration/genres/<%= genres.genreToModify.id %>" class="row col-4">
+      <form method="post" action="<%= `/${VIEW_LIBELLE.ADMINISTRATION}/${VIEW_LIBELLE.GENRES}/${genres.genreToModify.id}` %>" class="row col-4">
         <input type="hidden" class="form-control" id="id" name="id" value="<%= genres.genreToModify.id %>" />
         <div class="mb-3 col-8">
           <input type="text" class="form-control" id="nameM" name="nameM" value="<%= genres.genreToModify.name %>" />
         </div>
         <div class="col-12 row ">
-          <button type="submit" class="btn btn-primary col-5 ms-3" onclick="window.location.href='/administration/genres/:id'"><%= FRONTEND.GENRE_FORM_LIBELLE.UPDATE_ACTION_LIBELLE %></button>
-          <button class="btn btn-danger col-5 ms-3" onclick="window.location.href='/administration'"><%= FRONTEND.FILM_FORM_LIBELLE.CANCEL_BUTTON %></button>
+          <button type="submit" class="btn btn-primary col-5 ms-3" onclick="window.location.href='<%= `/${VIEW_LIBELLE.ADMINISTRATION}/${VIEW_LIBELLE.GENRES}/${VIEW_LIBELLE.UPDATE}/:id` %>'"><%= FRONTEND.GENRE_FORM_LIBELLE.UPDATE_ACTION_LIBELLE %></button>
+          <button class="btn btn-danger col-5 ms-3" onclick="window.location.href='<%= `/${VIEW_LIBELLE.ADMINISTRATION}` %>'"><%= FRONTEND.FILM_FORM_LIBELLE.CANCEL_BUTTON %></button>
         </div>
       </form>
       <% } else { %>
-      <form method="post" action="/administration/genres" class="row col-4">
+      <form method="post" action="<%= `/${VIEW_LIBELLE.ADMINISTRATION}/${VIEW_LIBELLE.GENRES}` %>" class="row col-4">
         <div class="mb-3 col-8">
           <input type="text" class="form-control" id="name" name="name" />
         </div>

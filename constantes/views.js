@@ -6,7 +6,9 @@ export const VIEW_LIBELLE = {
     ADMINISTRATION: "administration",
     FAVORIS: "favoris",
     PROFILE: "profile",
-    FILMS: "films"
+    FILMS: "films",
+    GENRES: "genres",
+    UPDATE: "update"
 };
 
 export const ROLE_LIBELLE = {

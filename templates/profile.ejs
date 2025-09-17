@@ -2,70 +2,60 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profil</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
-    <link rel="stylesheet" href="../css/custom-color.css" />
-    <link rel="stylesheet" href="../css/fonts.css" />
-    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
-        crossorigin="anonymous"></script>
-    <script defer src="https://kit.fontawesome.com/44e9c18f39.js" crossorigin="anonymous"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profil</title>
+  <%- include('partials/header') %>
 </head>
 
 <body>
-    <div class="container">
-        <%- include('partials/navbar') %>
-        <div class="row d-flex justify-content-center">
-            <h1 class="col-3"><%= FRONT.TITLE %></h1>
-        </div>
-        <%- include('partials/destroying-account-modal') %>
-        <div class="row">
-            <h3 class="mt-5 mb-4 text-decoration-underline"><%= FRONT.UPDATE_FORM_TITLE %></h3>
-            <form method="post" action="<%= `/${VIEW_LIBELLE.PROFILE}/${user.id}` %>" class="col-4">
-                <input type="hidden" id="id" name="id" value="<%= user.id %>">
-                <div class="mb-3">
-                    <label for="lastname" class="form-label"><%= AUTHENTIFICATION_LIBELLE.LASTNAME %></label>
-                    <input type="text" class="form-control" id="lastname" name="lastname"
-                        value="<%= user.lastname %>" />
-                </div>
-                <div class="mb-3">
-                    <label for="firstname" class="form-label"><%= AUTHENTIFICATION_LIBELLE.FIRSTNAME %></label>
-                    <input type="text" class="form-control" id="firstname" name="firstname"
-                        value="<%= user.firstname %>" />
-                </div>
-                <div class="mb-3">
-                    <label for="email" class="form-label"><%= AUTHENTIFICATION_LIBELLE.EMAIL %></label>
-                    <input type="email" class="form-control" id="email" name="email" value="<%= user.email %>" />
-                </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label"><%= AUTHENTIFICATION_LIBELLE.PASSWORD %></label>
-                    <input type="password" class="form-control" id="password" name="password" />
-                    <div id="emailHelp" class="form-text"><%= FRONT.ACTUAL_PASSWORD_HELPER %></div>
-                </div>
-                <div class="mb-3">
-                    <label for="newPassword" class="form-label"><%= FRONT.NEW_PASSWORD %></label>
-                    <input type="password" class="form-control" id="newPassword" name="newPassword" />
-                    <div id="emailHelp" class="form-text"><%= FRONT.NEW_PASSWORD_HELPER %></div>
-                </div>
-                <div class="mb-3">
-                    <label for="confirmPassword" class="form-label"><%= FRONT.CONFIRM_NEW_PASSWORD %></label>
-                    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" />
-                    <div id="emailHelp" class="form-text"><%= FRONT.CONFIRM_NEW_PASSWORD_HELPER %></div>
-                </div>
-                <div class="text-center mt-3 row d-flex justify-content-center">
-                    <button class="btn btn-danger col-5 me-3" onclick="window.location.href='/profile'"><%= FRONT.CANCEL_ACTION %></button>
-                    <button type="submit" class="btn btn-primary col-5"><%= FRONT.UPDATE_ACTION %></button>
-                </div>
-            </form>
-        </div>
-        <div class="row mt-5">
-            <button class="btn btn-danger col-4" data-bs-toggle="modal" data-bs-target="#destroying-account-modale"
-                data-bs-id="<%= user.id %>"><%= FRONT.DELETE_ACTION %></button>
-        </div>
+  <div class="container">
+    <%- include('partials/navbar') %>
+    <div class="row d-flex justify-content-center">
+      <h1 class="col-3"><%= FRONT.TITLE %></h1>
     </div>
+    <%- include('partials/destroying-account-modal') %>
+    <div class="row">
+      <h3 class="mt-5 mb-4 text-decoration-underline"><%= FRONT.UPDATE_FORM_TITLE %></h3>
+      <form method="post" action="<%= `/${VIEW_LIBELLE.PROFILE}/${user.id}` %>" class="col-4">
+        <input type="hidden" id="id" name="id" value="<%= user.id %>">
+        <div class="mb-3">
+          <label for="lastname" class="form-label"><%= AUTHENTIFICATION_LIBELLE.LASTNAME %></label>
+          <input type="text" class="form-control" id="lastname" name="lastname" value="<%= user.lastname %>" />
+        </div>
+        <div class="mb-3">
+          <label for="firstname" class="form-label"><%= AUTHENTIFICATION_LIBELLE.FIRSTNAME %></label>
+          <input type="text" class="form-control" id="firstname" name="firstname" value="<%= user.firstname %>" />
+        </div>
+        <div class="mb-3">
+          <label for="email" class="form-label"><%= AUTHENTIFICATION_LIBELLE.EMAIL %></label>
+          <input type="email" class="form-control" id="email" name="email" value="<%= user.email %>" />
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label"><%= AUTHENTIFICATION_LIBELLE.PASSWORD %></label>
+          <input type="password" class="form-control" id="password" name="password" />
+          <div id="emailHelp" class="form-text"><%= FRONT.ACTUAL_PASSWORD_HELPER %></div>
+        </div>
+        <div class="mb-3">
+          <label for="newPassword" class="form-label"><%= FRONT.NEW_PASSWORD %></label>
+          <input type="password" class="form-control" id="newPassword" name="newPassword" />
+          <div id="emailHelp" class="form-text"><%= FRONT.NEW_PASSWORD_HELPER %></div>
+        </div>
+        <div class="mb-3">
+          <label for="confirmPassword" class="form-label"><%= FRONT.CONFIRM_NEW_PASSWORD %></label>
+          <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" />
+          <div id="emailHelp" class="form-text"><%= FRONT.CONFIRM_NEW_PASSWORD_HELPER %></div>
+        </div>
+        <div class="text-center mt-3 row d-flex justify-content-center">
+          <button class="btn btn-danger col-5 me-3" onclick="window.location.href='/profile'"><%= FRONT.CANCEL_ACTION %></button>
+          <button type="submit" class="btn btn-primary col-5"><%= FRONT.UPDATE_ACTION %></button>
+        </div>
+      </form>
+    </div>
+    <div class="row mt-5">
+      <button class="btn btn-danger col-4" data-bs-toggle="modal" data-bs-target="#destroying-account-modale" data-bs-id="<%= user.id %>"><%= FRONT.DELETE_ACTION %></button>
+    </div>
+  </div>
 </body>
 
 </html>

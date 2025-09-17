@@ -155,8 +155,7 @@ const deleteById = async (id) => {
     const DELETE = `DELETE FROM Users WHERE id=?`;
     try {
         const deleted = await connection.query(DELETE, [id]);
-        const deletedFavoris = await Favoris_Repository.removeByUserId(id);
-        console.log(deletedFavoris);
+        await Favoris_Repository.removeByUserId(id);
         if (deleted[0].affectedRows > 0) {
                 return deleted[0].affectedRows;
         } else {

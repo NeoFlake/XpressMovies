@@ -21,6 +21,7 @@ export const ERROR_LIBELLE = {
     BAD_PASSWORD: "Mot de passe incorrect",
     TECHNICAL_ERROR_WHEN_PROFILE_MODIFICATION: "Erreur technique lors de la tentative de modification de votre compte; contactez le service de maintenance",
     NO_FAVORI_FOUND: "Aucun favori dans votre sélection",
-    PROFILE_DISPLAY_ERROR: "Votre profil n'a pas pu être chargé"
+    PROFILE_DISPLAY_ERROR: "Votre profil n'a pas pu être chargé",
+    ADMINISTRATION_DISPLAY_ERROR: "La console d'administration a rencontré une erreur lors de son chargement"
 };
 
