@@ -1,21 +1,27 @@
-import UserRepository from "../repositories/users.repository.js";
 import AuthentificationService from "../services/authentification.service.js";
-import bcrypt from 'bcrypt';
 import { VIEW_LIBELLE } from '../constantes/views.js';
-import { ERROR_LIBELLE } from "../constantes/errors.js";
 import { AUTHENTIFICATION_LIBELLE } from "../constantes/authentification.js";
 
 const displayInscriptionForm = (req, res) => {
     res.render(VIEW_LIBELLE.AUTHENTIFICATION, { 
-        title: "Inscription", 
+        title: AUTHENTIFICATION_LIBELLE.INSCRIPTION_PAGE_TITLE, 
         form: VIEW_LIBELLE.INSCRIPTION, 
         errors: [], 
         currentRoute: req.url, 
-        AUTHENTIFICATION_LIBELLE: AUTHENTIFICATION_LIBELLE });
+        AUTHENTIFICATION_LIBELLE: AUTHENTIFICATION_LIBELLE,
+        VIEW_LIBELLE: VIEW_LIBELLE
+    });
 }
 
 const displayLoginForm = (req, res) => {
-    res.render(VIEW_LIBELLE.AUTHENTIFICATION, { title: "Connexion", form: VIEW_LIBELLE.LOGIN, errors: [], currentRoute: req.url, AUTHENTIFICATION_LIBELLE: AUTHENTIFICATION_LIBELLE });
+    res.render(VIEW_LIBELLE.AUTHENTIFICATION, { 
+        title: AUTHENTIFICATION_LIBELLE.LOGIN_PAGE_TITLE, 
+        form: VIEW_LIBELLE.LOGIN, 
+        errors: [], 
+        currentRoute: req.url, 
+        AUTHENTIFICATION_LIBELLE: AUTHENTIFICATION_LIBELLE,
+        VIEW_LIBELLE: VIEW_LIBELLE
+    });
 }
 
 const inscription = async (req, res) => {
@@ -23,34 +29,30 @@ const inscription = async (req, res) => {
         await AuthentificationService.inscription(req);
         redirectToConnexion(res);
     } catch (error) {
-        res.render(VIEW_LIBELLE.AUTHENTIFICATION, { title: "Inscription", form: VIEW_LIBELLE.INSCRIPTION, errors: error.errors, currentRoute: req.url, AUTHENTIFICATION_LIBELLE: AUTHENTIFICATION_LIBELLE });
+        res.render(VIEW_LIBELLE.AUTHENTIFICATION, { 
+            title: AUTHENTIFICATION_LIBELLE.INSCRIPTION_PAGE_TITLE, 
+            form: VIEW_LIBELLE.INSCRIPTION, 
+            errors: error.errors, 
+            currentRoute: req.url, 
+            AUTHENTIFICATION_LIBELLE: AUTHENTIFICATION_LIBELLE,
+            VIEW_LIBELLE: VIEW_LIBELLE
+        });
     }
 }
 
 const login = async (req, res) => {
     try {
-        const user = await UserRepository.findByEmail(req.body.emailC);
-        if (user === 0) {
-            throw new Error();
-        } else {               
-            if (bcrypt.compareSync(req.body.passwordC, user.password)) {
-                
-                req.session.userLogged = {
-                    id: user.id,
-                    lastname: user.lastname,
-                    firstname: user.firstname,
-                    email: user.email,
-                    role: user.role
-                };
-                
-                res.redirect(`/${VIEW_LIBELLE.HOMEPAGE}`);
-
-            } else {
-  
-            };
-        }
+        await AuthentificationService.login(req);
+        res.redirect(`/${VIEW_LIBELLE.HOMEPAGE}`);
     } catch (error) {
-        res.render(VIEW_LIBELLE.AUTHENTIFICATION, { title: "Connexion", form: VIEW_LIBELLE.LOGIN, errors: [ERROR_LIBELLE.AUTHENTIFICATION_FAIL], AUTHENTIFICATION_LIBELLE: AUTHENTIFICATION_LIBELLE });
+        res.render(VIEW_LIBELLE.AUTHENTIFICATION, { 
+            title: AUTHENTIFICATION_LIBELLE.LOGIN_PAGE_TITLE, 
+            form: VIEW_LIBELLE.LOGIN, 
+            errors: [error.message], 
+            AUTHENTIFICATION_LIBELLE: AUTHENTIFICATION_LIBELLE,
+            VIEW_LIBELLE: VIEW_LIBELLE,
+            currentRoute: req.url
+        });
     }
 }
 

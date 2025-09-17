@@ -1,6 +1,8 @@
 export const ERROR_LIBELLE = {
     GENRE_TITLE_ALREADY_EXIST: "Cet intitulé de genre de film existe déjà",
     FILM_TITLE_ALREADY_EXIST: "Ce titre de film existe déjà",
+    TITLE_NOT_FOUND: "Cette recherche par titre n'a donné aucun résultat",
+    LOADING_FILMS_FAIL: "Échec lors du chargement des films",
     EMAIL_ALDREADY_EXIST: "Vous ne pouvez pas utiliser cet email",
     NEW_FAVORI_ERROR: "Votre favori n'a pas pu être ajouté",
     ADD_GENRE_DB_ERROR: "L'intitulé de ce genre de film n'a pas pu être poussé en base",

@@ -18,7 +18,7 @@
     </div>
     <div class="row d-flex justify-content-center">
       <div class="col-4 d-flex justify-content-center">
-        <% if(form === "inscription") { %>
+        <% if(form === VIEW_LIBELLE.INSCRIPTION) { %>
         <form method="post" class="row">
           <div class="mb-3">
             <label for="lastnameI" class="form-label"><%= AUTHENTIFICATION_LIBELLE.LASTNAME %></label>
@@ -42,7 +42,7 @@
           </div>
         </form>
         <% } %>
-        <% if(form === "login") { %>
+        <% if(form === VIEW_LIBELLE.LOGIN) { %>
         <form method="post" class="row">
           <div class="mb-3">
             <label for="emailC" class="form-label"><%= AUTHENTIFICATION_LIBELLE.EMAIL %></label>
@@ -60,8 +60,8 @@
       </div>
     </div>
     <div class="row d-flex justify-content-center mt-4">
-      <a class="col-6 text-center text-decoration-none" href=<%= `${currentRoute === "/inscription" ? "login" : "inscription"}`%>>
-        <%= currentRoute === "/inscription" ? "Déjà inscrit? Connectez-vous ici" : "Suivez ce lien pour vous inscrire" %>
+      <a class="col-6 text-center text-decoration-none" href=<%= currentRoute === `/${VIEW_LIBELLE.INSCRIPTION}` ? VIEW_LIBELLE.LOGIN : VIEW_LIBELLE.INSCRIPTION %>>
+        <%= currentRoute === `/${VIEW_LIBELLE.INSCRIPTION}` ? AUTHENTIFICATION_LIBELLE.LINK_LOGIN_LIBELLE : AUTHENTIFICATION_LIBELLE.LINK_INSCRIPTION_LIBELLE %>
       </a>
     </div>
     <% if(errors !== [] && errors.length > 0){ %>
