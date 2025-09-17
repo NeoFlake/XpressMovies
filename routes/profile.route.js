@@ -1,10 +1,10 @@
 import express from "express";
 import ProfileController from "../controllers/profile.controller.js";
-import AuthentificationService from "../services/authentification.service.js";
+import RoleService from "../services/role.service.js";
 
 const router = express.Router();
 
-router.use(AuthentificationService.requireLogin);
+router.use(RoleService.requireLogin);
 
 router
     .get("/", ProfileController.displayView)

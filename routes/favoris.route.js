@@ -1,10 +1,10 @@
 import express from "express";
-import AuthentificationService from "../services/authentification.service.js";
+import RoleService from "../services/role.service.js";
 import FavorisController from "../controllers/favoris.controller.js";
 
 const router = express.Router();
 
-router.use(AuthentificationService.requireRole("ABONNE"));
+router.use(RoleService.requireRole("ABONNE"));
 
 router
     .get("/", FavorisController.displayView)

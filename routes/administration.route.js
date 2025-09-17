@@ -1,10 +1,10 @@
 import express from "express";
 import AdministrationController from "../controllers/administration.controller.js";
-import AuthentificationService from "../services/authentification.service.js";
+import RoleService from "../services/role.service.js";
 
 const router = express.Router();
 
-router.use(AuthentificationService.requireRole("ADMIN"));
+router.use(RoleService.requireRole("ADMIN"));
 
 router
     .get("/genres/modify/:id", AdministrationController.displayModifierGenreForm)
