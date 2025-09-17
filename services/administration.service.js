@@ -21,6 +21,7 @@ const displayAdminPage = async (req) => {
         const flashDisplayModifyGenreForm = req.flash("displayModifyGenreForm");
         const flashIdFilmToModify = req.flash("idFilmToModify");
         const flashDisplayModifyFilmForm = req.flash("displayModifierFilmForm");
+        const anchor = req.flash("anchor");
 
         const idGenreToModify = flashIdGenreToModify.length > 0 ? flashIdGenreToModify[0] : 0;
         const displayModifyGenreForm = flashDisplayModifyGenreForm.length > 0 ? flashDisplayModifyGenreForm[0] : false;
@@ -45,24 +46,25 @@ const displayAdminPage = async (req) => {
         };
 
         const viewData = {
-                user: user,
-                films: films,
-                genres: {
-                    list: genres,
-                    displayModifyGenreForm: displayModifyGenreForm,
-                    genreToModify: null
-                },
-                films: {
-                    list: films,
-                    displayModifyFilmForm: displayModifyFilmForm,
-                    filmToModify: null
-                },
-                navbar: navbar,
-                card: card,
-                FRONTEND: FRONTEND,
-                VIEW_LIBELLE: VIEW_LIBELLE,
-                error: { genreError: req.flash("genreError"), filmError: req.flash("filmError") }
-            };
+            user: user,
+            films: films,
+            genres: {
+                list: genres,
+                displayModifyGenreForm: displayModifyGenreForm,
+                genreToModify: null
+            },
+            films: {
+                list: films,
+                displayModifyFilmForm: displayModifyFilmForm,
+                filmToModify: null
+            },
+            navbar: navbar,
+            card: card,
+            FRONTEND: FRONTEND,
+            VIEW_LIBELLE: VIEW_LIBELLE,
+            anchor: anchor,
+            error: { genreError: req.flash("genreError"), filmError: req.flash("filmError") }
+        };
 
         if (displayModifyGenreForm) {
             const genreToModify = await GenresRepository.findById(idGenreToModify);
@@ -70,7 +72,7 @@ const displayAdminPage = async (req) => {
         } else if (displayModifyFilmForm) {
             const filmToModify = await FilmsRepository.findById(idFilmToModify);
             viewData.films.filmToModify = filmToModify;
-        } 
+        }
         return viewData;
     } catch (error) {
         throw new Error(ERROR_LIBELLE.ADMINISTRATION_DISPLAY_ERROR);
@@ -78,6 +80,7 @@ const displayAdminPage = async (req) => {
 }
 
 const addGenre = async (req) => {
+    req.flash("anchor");
     try {
         await ValidationService.genreSchema.validate(req.body);
         const nameKnown = await GenresRepository.nameAlreadyKnown(req.body.name);
@@ -96,11 +99,13 @@ const addGenre = async (req) => {
 }
 
 const displayModifierGenreForm = (req) => {
+    req.flash("anchor", "genreForm");
     req.flash("displayModifyGenreForm", true);
     req.flash("idGenreToModify", req.params.id);
 }
 
 const modifierGenre = async (req) => {
+    req.flash("anchor", "genreForm");
     try {
         if (req.params.id === req.body.id) {
             await ValidationService.modifyGenreSchema.validate(req.body);
@@ -124,6 +129,7 @@ const modifierGenre = async (req) => {
 }
 
 const supprimerGenre = async (req) => {
+    req.flash("anchor", "genreForm");
     try {
         const deleted = await GenresRepository.deleteById(req.params.id);
         if (deleted === false) {
@@ -136,7 +142,7 @@ const supprimerGenre = async (req) => {
 }
 
 const addFilm = async (req) => {
-
+    req.flash("anchor", "filmForm");
     try {
         await ValidationService.filmSchema.validate(req.body);
         const titleKnown = await FilmsRepository.existByTitle(req.body.title);
@@ -163,6 +169,7 @@ const addFilm = async (req) => {
 }
 
 const supprimerFilm = async (req) => {
+    req.flash("anchor", "filmForm");
     try {
         const deleted = await FilmsRepository.deleteById(req.params.id);
         if (deleted === 0) {
@@ -175,11 +182,13 @@ const supprimerFilm = async (req) => {
 }
 
 const displayModifierFilmForm = (req) => {
+    req.flash("anchor", "filmForm");
     req.flash("displayModifierFilmForm", true);
     req.flash("idFilmToModify", req.params.id);
 }
 
 const modifierFilm = async (req) => {
+    req.flash("anchor", "filmForm");
     try {
         if (req.params.id === req.body.id) {
             await ValidationService.modifyFilmSchema.validate(req.body);

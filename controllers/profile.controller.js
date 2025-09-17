@@ -1,10 +1,6 @@
-import { ERROR_LIBELLE } from "../constantes/errors.js";
 import { VIEW_LIBELLE } from "../constantes/views.js";
 import { FRONT } from "../constantes/profile.js";
 import { AUTHENTIFICATION_LIBELLE } from "../constantes/authentification.js";
-import UserRepository from "../repositories/users.repository.js";
-import validationService from "../services/validation.service.js";
-import bcrypt from 'bcrypt';
 import ProfileService from "../services/profile.service.js";
 
 const displayView = async (req, res) => {

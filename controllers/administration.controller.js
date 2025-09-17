@@ -1,5 +1,4 @@
 import AdministrationService from "../services/administration.service.js";
-import { FRONTEND } from "../constantes/administration.js";
 import { VIEW_LIBELLE } from "../constantes/views.js";
 
 const displayAdminPage = async (req, res) => {

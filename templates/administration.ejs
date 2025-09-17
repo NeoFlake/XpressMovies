@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="../css/administration.css" />
 </head>
 
-<body>
+<body onload="location.hash='<%= anchor %>'">
   <div class="container">
     <%- include('partials/navbar') %>
     <div class="row d-flex justify-content-center mt-5">
@@ -22,7 +22,7 @@
     <% if(films.list.length> 0) { %>
     <%- include('partials/film-card') %>
     <% } %>
-    <div class="row mt-3">
+    <div id="filmForm" class="row mt-3">
       <% if(films.displayModifyFilmForm) { %>
       <form method="post" action="<%= `/${VIEW_LIBELLE.ADMINISTRATION}/${VIEW_LIBELLE.FILMS}/${films.filmToModify.id}` %>" class="row col-6">
         <input type="hidden" name="id" value="<%= films.filmToModify.id %>">
@@ -125,7 +125,7 @@
       </ul>
       <% } %>
     </div>
-    <div class="row mt-3">
+    <div id="genreForm" class="row mt-3">
       <% if(genres.displayModifyGenreForm) { %>
       <form method="post" action="<%= `/${VIEW_LIBELLE.ADMINISTRATION}/${VIEW_LIBELLE.GENRES}/${genres.genreToModify.id}` %>" class="row col-4">
         <input type="hidden" class="form-control" id="id" name="id" value="<%= genres.genreToModify.id %>" />
