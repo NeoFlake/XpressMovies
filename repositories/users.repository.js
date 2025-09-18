@@ -1,4 +1,5 @@
 import connection from "../config/db.config.js";
+import { DB_ERROR } from "../constantes/errors.js";
 import Favoris_Repository from "./favoris.repository.js";
 
 const findAll = async () => {
@@ -29,7 +30,7 @@ const findAll = async () => {
             return [];
         }
     } catch (error) {
-        throw new Error(error);
+        throw new Error(DB_ERROR.FIND_USERS);
     }
 }
 
@@ -50,7 +51,7 @@ const findByEmail = async (email) => {
             return 0;
         }
     } catch (error) {
-        throw new Error(error);
+        throw new Error(DB_ERROR.FIND_USER);
     }
 }
 
@@ -101,7 +102,7 @@ const findById = async (id) => {
             return [];
         }
     } catch (error) {
-        throw new Error(error);
+        throw new Error(DB_ERROR.FIND_USER);
     }
 }
 
@@ -112,10 +113,10 @@ const add = async (user) => {
         if (resultat[0].affectedRows > 0) {
             return resultat[0].affectedRows;
         } else {
-            throw new Error("Le nouvel utilisateur n'a pas pu être poussé en base");
+            throw new Error(DB_ERROR.ADD_USER);
         }
     } catch (error) {
-        throw new Error(error);
+        throw new Error(DB_ERROR.ADD_USER);
     }
 }
 
@@ -126,10 +127,10 @@ const updateById = async (id, user) => {
         if (resultat[0].affectedRows > 0) {
             return resultat[0].affectedRows;
         } else {
-            throw new Error("L'utilisateur n'a pas pu être mis à jour'");
+            throw new Error(DB_ERROR.UPDATE_USER);
         }
     } catch (error) {
-        throw new Error(error);
+        throw new Error(DB_ERROR.UPDATE_USER);
     }
 }
 
@@ -141,13 +142,13 @@ const updateFavorisByUserId = async (id, favoris) => {
             if (addNewFavoris.affectedRows > 0) {
                 return resultat[0].affectedRows;
             } else {
-                throw new Error("Problème lors de la modification des favoris");
+                throw new Error(DB_ERROR.UPDATE_GENRE);
             }
         } else {
-            throw new Error("Problème lors de la modification des favoris");
+            throw new Error(DB_ERROR.UPDATE_GENRE);
         }
     } catch (error) {
-        throw new Error(error);
+        throw new Error(DB_ERROR.UPDATE_GENRE);
     }
 }
 
@@ -159,10 +160,10 @@ const deleteById = async (id) => {
         if (deleted[0].affectedRows > 0) {
                 return deleted[0].affectedRows;
         } else {
-            throw new Error("La suppression de l'utilisateur n'a pas pu être effectué");
+            throw new Error(DB_ERROR.DELETE_USER);
         }
     } catch (error) {
-        throw new Error(error);
+        throw new Error(DB_ERROR.DELETE_USER);
     }
 }
 

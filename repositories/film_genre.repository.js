@@ -1,4 +1,5 @@
 import connection from "../config/db.config.js";
+import { DB_ERROR } from "../constantes/errors.js";
 
 const add = async (filmGenre) => {
     const INSERT = "INSERT INTO Film_Genre (genreId, filmId) VALUES (?, ?)";
@@ -7,7 +8,7 @@ const add = async (filmGenre) => {
         if(resultat[0].affectedRows > 0){
             return resultat[0].affectedRows;
         } else {
-            throw new Error("Le nouveau genre n'a pas été posté en base");
+            throw new Error(DB_ERROR.ADD_GENRE);
         }
     } catch (error) {
         throw new Error(error);
@@ -23,7 +24,7 @@ const addMultiple = async (filmId, genreIds) => {
         if([resultat][0].affectedRows > 0){
             return true;
         } else {
-            throw new Error("Les nouveaux genres n'ont pas étés postés en base");
+            throw new Error(DB_ERROR.ADD_MULTIPLE_GENRES);
         }
     } catch (error) {
         throw new Error(error);
@@ -37,7 +38,7 @@ const removeByFilmId = async (id) => {
         if (deleted[0].affectedRows > 0) {
             return deleted[0].affectedRows;
         } else {
-            throw new Error("La suppression n'a pas pu être effectué");
+            throw new Error(DB_ERROR.DELETE_FAVORIS);
         }
     } catch (error) {
         throw new Error(error);
@@ -51,7 +52,7 @@ const removeByGenreId = async (id) => {
         if (deleted[0].affectedRows > 0) {
             return deleted[0].affectedRows;
         } else {
-            throw new Error("La suppression n'a pas pu être effectué");
+            throw new Error(DB_ERROR.DELETE_FAVORIS);
         }
     } catch (error) {
         throw new Error(error);

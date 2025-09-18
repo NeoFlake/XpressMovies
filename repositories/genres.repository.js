@@ -1,4 +1,5 @@
 import connection from "../config/db.config.js";
+import { DB_ERROR } from "../constantes/errors.js";
 
 const findAll = async () => {
     const SELECT = "SELECT * FROM Genres";
@@ -10,7 +11,7 @@ const findAll = async () => {
             return [];
         }
     } catch (error) {
-        throw new Error(error);
+        throw new Error(DB_ERROR.FIND_GENRES);
     }
 }
 
@@ -24,10 +25,10 @@ const findById = async (id) => {
                 name: resultat[0][0].name
             };
         } else {
-            throw new Error("Aucun genre n'a été trouvé avec cet identifiant");
+            throw new Error(DB_ERROR.FIND_GENRE);
         }
     } catch (error) {
-        throw new Error(error);
+        throw new Error(DB_ERROR.FIND_GENRE);
     }
 }
 
@@ -40,7 +41,7 @@ const nameAlreadyKnown = async (name) => {
             result = true;
         } 
     } catch (error) {
-        throw new Error(error);
+        throw new Error(DB_ERROR.FIND_GENRE);
     }
     return result;
 }
@@ -52,10 +53,10 @@ const add = async (name) => {
         if(resultat[0].affectedRows > 0){
             return resultat[0].affectedRows;
         } else {
-            throw new Error("Le nouveau genre n'a pas été posté en base");
+            throw new Error(DB_ERROR.ADD_GENRE);
         }
     } catch (error) {
-        throw new Error(error);
+        throw new Error(DB_ERROR.ADD_GENRE);
     }
 }
 
@@ -66,10 +67,10 @@ const updateById = async (id, genre) => {
         if(update[0].affectedRows > 0){
             return true;
         } else {
-            throw new Error("Le genre n'a pas été modifié en base");
+            throw new Error(DB_ERROR.UPDATE_GENRE);
         }
     } catch (error) {
-        throw new Error(error);
+        throw new Error(DB_ERROR.UPDATE_GENRE);
     }
 }
 
@@ -80,10 +81,10 @@ const deleteById = async (id) => {
         if (deleted[0].affectedRows > 0) {
             return true;
         } else {
-            throw new Error("La suppression du genre n'a pas pu être effectué");
+            throw new Error(DB_ERROR.DELETE_GENRE);
         }
     } catch (error) {
-        throw new Error(error);
+        throw new Error(DB_ERROR.DELETE_GENRE);
     }
 }
 

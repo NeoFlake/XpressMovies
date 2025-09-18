@@ -29,7 +29,7 @@
        if ((card.user.favoris.filter(f => f !== null).length > 0 && card.user.favoris.some(favori => favori.id === film.id))) { %>
         <i class="fa-solid fa-star yellowstar"></i>
         <% } else { %>
-        <i class="fa-regular fa-star cursor-pointer" onclick="window.location.href='/homepage/favori/<%= film.id %>'"></i>
+        <i class="fa-regular fa-star cursor-pointer" onclick="window.location.href='/homepage/favoris/<%= film.id %>'"></i>
         <% }
      }
      break;

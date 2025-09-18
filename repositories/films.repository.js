@@ -1,4 +1,5 @@
 import connection from "../config/db.config.js";
+import { DB_ERROR } from "../constantes/errors.js";
 import Film_Genre_Repository from "./film_genre.repository.js";
 
 const findAll = async () => {
@@ -15,7 +16,7 @@ const findAll = async () => {
             return [];
         }
     } catch (error) {
-        throw new Error(error);
+        throw new Error(DB_ERROR.FIND_FILMS);
     }
 }
 
@@ -29,7 +30,7 @@ const existByTitle = async (title) => {
         }
         return result;
     } catch (error) {
-        throw new Error(error);
+        throw new Error(DB_ERROR.FIND_FILM);
     }
 }
 
@@ -55,10 +56,14 @@ const findById = async (id) => {
                 description: resultat[0][0].description
             };
         } else {
-            throw new Error("Aucun film n'a été trouvé avec cet identifiant");
+            throw new Error(DB_ERROR.NO_FILM_BY_ID);
         }
     } catch (error) {
-        throw new Error(error);
+        if (error.message !== DB_ERROR.NO_FILM_BY_ID) {
+            throw new Error(DB_ERROR.FIND_FILM);
+        } else {
+            throw new Error(error.message);
+        }
     }
 }
 
@@ -72,13 +77,17 @@ const findLikeByTitle = async (title) => {
         GROUP BY f.id`;
     try {
         const resultat = await connection.query(SELECT, [`%${title}%`]);
-        if (resultat[0].length > 0) {  
+        if (resultat[0].length > 0) {
             return resultat[0];
         } else {
-            throw new Error("Aucun film n'a été trouvé avec ce filtre");
+            throw new Error(DB_ERROR.NO_FILM_BY_ID);
         }
     } catch (error) {
-        throw new Error(error);
+        if (error.message !== DB_ERROR.NO_FILM_BY_ID) {
+            throw new Error(DB_ERROR.FIND_FILM);
+        } else {
+            throw new Error(error.message);
+        }
     }
 }
 
@@ -92,13 +101,13 @@ const add = async (film) => {
             if (genres) {
                 return true;
             } else {
-                throw new Error("Problème lors de l'insertion des genres du film");
+                throw new Error(DB_ERROR.ADD_FILM);
             }
         } else {
-            throw new Error("Le nouveau film n'a pas pu être posté en base");
+            throw new Error(DB_ERROR.ADD_FILM);
         }
     } catch (error) {
-        throw new Error(error);
+        throw new Error(DB_ERROR.ADD_FILM);
     }
 }
 
@@ -113,16 +122,16 @@ const updateById = async (id, film) => {
                 if (addNewGenres > 0) {
                     return resultat[0].affectedRows;
                 } else {
-                    throw new Error("Les nouveaux genres du film n'ont pas pu être insérés");
+                    throw new Error(DB_ERROR.UPDATE_FILM);
                 }
             } else {
-                throw new Error("Problème lors de l'insertion des genres du film");
+                throw new Error(DB_ERROR.UPDATE_FILM);
             }
         } else {
-            throw new Error("Le film n'a pas pu être mis à jour");
+            throw new Error(DB_ERROR.UPDATE_FILM);
         }
     } catch (error) {
-        throw new Error(error);
+        throw new Error(DB_ERROR.UPDATE_FILM);
     }
 }
 
@@ -135,13 +144,13 @@ const deleteById = async (id) => {
             if (deletedFilmGenres[0].affectedRows > 0) {
                 return deleted[0].affectedRows;
             } else {
-                throw new Error("La suppression des genres du film n'a pas pu être effectué");
+                throw new Error(DB_ERROR.DELETE_FILM);
             }
         } else {
-            throw new Error("La suppression du film n'a pas pu être effectué");
+            throw new Error(DB_ERROR.DELETE_FILM);
         }
     } catch (error) {
-        throw new Error(error);
+        throw new Error(DB_ERROR.DELETE_FILM);
     }
 }
 

@@ -25,3 +25,26 @@ export const ERROR_LIBELLE = {
     ADMINISTRATION_DISPLAY_ERROR: "La console d'administration a rencontré une erreur lors de son chargement"
 };
 
+export const DB_ERROR = {
+    ADD_FAVORIS: "Le nouveau favori n'a pas été posté en base",
+    ADD_MULTIPLE_FAVORIS: "Les nouveaux favoris n'ont pas étés postés en base",
+    DELETE_FAVORIS: "La suppression n'a pas pu être effectué",
+    ADD_GENRE: "Le nouveau genre n'a pas été posté en base",
+    ADD_MULTIPLE_GENRES: "Les nouveaux genres n'ont pas étés postés en base",
+    FIND_FILMS: "Les films n'ont pas pu être trouvés",
+    FIND_FILM: "Le film n'a' pas pu être trouvé",
+    NO_FILM: "Aucun film n'a été trouvé",
+    ADD_FILM: "Le nouveau film n'a pas été posté en base",
+    UPDATE_FILM: "Problème lors de la mise à jour du film",
+    DELETE_FILM: "La suppression du film n'a pas pu être effectué",
+    FIND_GENRES: "Les genres du films n'ont pas pu être trouvés",
+    FIND_GENRE: "Le genre du films n'a pas pu être trouvé",
+    UPDATE_GENRE: "Le changement de genre n'a pas pu être effectué",
+    DELETE_GENRE: "La suppression du genre n'a pas pu être effectué",
+    FIND_USERS: "Les utilisateurs n'ont pas pu être trouvé",
+    FIND_USER: "L'utilisateur n'a pas pu être trouvé",
+    ADD_USER: "Le nouvel utilisateur n'a pas été posté en base",
+    UPDATE_USER: "La mise à jour de l'utilisateur n'a pas pu être effectué",
+    DELETE_USER: "La suppression de l'utilisateur n'a pas pu être effectué"
+}
+
